@@ -4,13 +4,13 @@
         //var $form = modalManager.getForm();
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.10.377/build/pdf.worker.min.js";
         pdfjsLib.disableWorker = true;
-
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
-        //let fileName = "./Pdf/Invoice_153494.pdf"
-
         let pdfDoc = null,
+            pdfFactory = null,
+            viewp = null,
             pageNum = 1,
             pageRendering = false,
+            isBestFit = true,
             pageNumPending = null,
             scale = 1,
             pdfViewerCanvas = document.getElementById('pdfViewer'),
@@ -20,50 +20,52 @@
 
         let startX, startY, endX, endY;
         let activeElement;
-        const pdfViewerCanvasWidth = pdfViewerCanvas.width;
-        const pdfViewerCanvasHeight = pdfViewerCanvas.height;
-        let pdfFactory = undefined;
-        
-
+        var desiredWidth = 800;
+        let x_1, y_1, x_2, y_2;
 
         pdfjsLib.getDocument(fileName).promise.then((pdfDoc_) => {
             pdfDoc = pdfDoc_;
             document.getElementById('page_count').textContent = pdfDoc.numPages;
-
             // Initial/first page rendering
+            loadPdfFactory();
             renderPage(pageNum);
         });
+        const loadPdfFactory = () => {
+            pdfDoc.getData().then((data) => {
+                pdfFactory = new pdfAnnotate.AnnotationFactory(data)
+                console.log(pdfFactory.data);
+            })
+        };
 
-        function renderPage(num) {
+        const renderPage = (num) => {
             pageRendering = true;
-            // Using promise to fetch the page
             pdfDoc.getPage(num).then(function (page) {
-                let vp = page.getViewport({ scale });
-                let scaleRatio = Math.min(pdfViewerCanvasWidth / vp.width, pdfViewerCanvasHeight / vp.height);
-                var viewport = page.getViewport({ scale: scaleRatio  });
+                let viewport = page.getViewport({ scale: 1 });
+                let scaleRatio = Math.max(desiredWidth / viewport.width);
 
-                pdfViewerCanvasContext.imageSmoothingEnabled = false;
+                if (isBestFit === true) {
+                    viewport = page.getViewport({ scale: scaleRatio });
+                } else {
+                    viewport = page.getViewport({ scale: scale });
+                }
 
-                pdfViewerCanvas.width = vp.width * scaleRatio;
-                pdfViewerCanvas.height = vp.height * scaleRatio;
+                pdfViewerCanvas.width = viewport.width;
+                pdfViewerCanvas.height = viewport.height;
+                drawingCanvas.height = viewport.height;
+                drawingCanvas.width = viewport.width;
+                //pdfViewerCanvasContext.scale(scale, scale)
+                //pdfViewerCanvasContext.imageSmoothingEnabled = true;
+                viewp = viewport;
 
-                pdfViewerCanvasContext.scale(scale, scale)
-
-                //pdfViewerCanvas.height = viewport.height
-                //pdfViewerCanvas.width = viewport.width;
-                //drawingCanvas.height = viewport.height;
-                //drawingCanvas.width = viewport.width;
-
-
-                // Render PDF page into canvas context
+                // Wait for rendering to finish
                 var renderContext = {
                     canvasContext: pdfViewerCanvasContext,
                     viewport: viewport,
                     enableHighResolution: true
                 };
                 var renderTask = page.render(renderContext);
-
-                // Wait for rendering to finish
+                //pdfjsLib.AnnotationLayer.render(page, viewport, { annotation });
+                //console.log(pdfjsLib.AnnotationLayer);
                 renderTask.promise.then(function () {
                     pageRendering = false;
                     if (pageNumPending !== null) {
@@ -134,13 +136,9 @@
 
                 mousedown = false;
                 getImage();
-                //pdfDoc.getData().then((data) => {
 
-                //    pdfFactory = new pdfAnnotationFactory(data)
-                //    pdfFactory.createHighlightAnnotation(pageNum,)
-                //})
             });
-
+            
             //Mousemove
             $(drawingCanvas).on('mousemove', function (e) {
                 mousex = parseInt(e.clientX - canvasx);
@@ -149,7 +147,7 @@
                     drawingCanvasContext.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
                     drawingCanvasContext.beginPath();
                     var width = mousex - last_mousex;
-                    var height = mousey - last_mousey;
+                     var height = mousey - last_mousey;
                     drawingCanvasContext.rect(last_mousex, last_mousey, width, height);
                     drawingCanvasContext.strokeStyle = 'red';
                     drawingCanvasContext.lineWidth = 1;
@@ -158,41 +156,14 @@
                     endY = mousey;
                 }
             });
-
-
-
         });
-        //let selectionCoordinates = function () {
-        //    let rec = window.getSelection().getRangeAt(0).getBoundingClientRect()
-        //    let ost = computePageOffset()
-        //    let x_1 = rec.x - ost.left
-        //    let y_1 = rec.y - ost.top
-        //    let x_2 = x_1 + rec.width
-        //    let y_2 = y_1 + rec.height
-
-        //    let x_1_y_1 = pdfViewer._pages[pageNum].viewport.convertToPdfPoint(x_1, y_1)
-        //    x_1 = x_1_y_1[0]
-        //    y_1 = x_1_y_1[1]
-        //    let x_2_y_2 = pdfViewer._pages[pageNum].viewport.convertToPdfPoint(x_2, y_2)
-        //    x_2 = x_2_y_2[0]
-        //    y_2 = x_2_y_2[1]
-        //    return [x_1, y_1, x_2, y_2]
-        //}
-        //let computePageOffset = function () {
-        //    var rect = pg.getBoundingClientRect(), bodyElt = document.body;
-        //    return {
-        //        top: rect.top + bodyElt.scrollTop,
-        //        left: rect.left + bodyElt.scrollLeft
-        //    }
-        //}
-
 
         function getImage() {
             const rectangleWidth = Math.abs(endX - startX);
             const rectangleHeight = Math.abs(endY - startY);
             const rectangleX = Math.min(startX, endX);
             const rectangleY = Math.min(startY, endY);
-
+            //console.log(rectangleX, rectangleY, rectangleWidth, rectangleHeight);
 
             var newCanvas = document.createElement('canvas');
             newCanvas.width = rectangleWidth;
@@ -202,40 +173,52 @@
             var imageData = newCanvas.toDataURL('image/tiff');
             getText(imageData);
 
-            //newCtx.putImageData(imageData, 0, 0);
-            //var base64Data = newCanvas.toDataURL('image/tiff');
+            var parent = document.getElementById('content-wrapper');
+            const canvas = document.createElement("canvas");
 
-            //var rect = pdfViewerCanvas.getBoundingClientRect();
-            //var x = rect.left;
-            //var y = rect.top;
-            //var width = rect.width;
-            //var height = rect.height;
+            // Set the width and height of the canvas
+            canvas.width = rectangleWidth;
+            canvas.height = rectangleHeight;
 
-            //console.log(rect);
+            // Get the 2D context of the canvas
+            const ctx = canvas.getContext("2d");
+            var width = endX - startX;
+            var height = endY - startY;
+            // Create a rectangle using the context
+            ctx.rect(startX, startY, width, height);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            //canvas.style.zIndex = 1;
+            //canvas.style.border = "2px solid black";
+            //canvas.style.position = "fixed";
 
-            //var newCanvas = document.createElement('canvas');
-            //newCanvas.width = width;
-            //newCanvas.height = height;
-            //var newCtx = newCanvas.getContext('2d');
-
-
-            //newCtx.drawImage(drawingCanvas, x, y, width, height, 0, 0, width, height);
-            //var imageData = newCanvas.toDataURL('image/tiff');
-
-            //// Convert the base64-encoded string to a binary TIFF file
-            //console.log(imageData);
-            //var arrayBuffer = base64ToArrayBuffer(imageData.replace(/^data:image\/(tiff|png);base64,/, ''));
-            //var tiff = new Tiff({ buffer: arrayBuffer });
-
-            //// Save the TIFF file to disk
-            //var blob = new Blob([tiff.toBuffer()], { type: 'image/tiff' });
-            //saveAs(blob, 'selected-area.tiff');
+            // Append the canvas to the parent element
+            parent.appendChild(canvas);
 
         };
+
+        let selectionCoordinates = function (box) {
+            
+            
+            return [x_1, y_1, x_2, y_2]
+        }
 
         function getText(image) {
             Tesseract.recognize(image, 'eng').then(function (result) {
                 setText(result.data.text);
+                if (result.data.blocks[0] != undefined) {
+                    x_1 = result.data.blocks[0].bbox.x0;
+                    y_1 = result.data.blocks[0].bbox.y0;
+                    x_2 = result.data.blocks[0].bbox.x1;
+                    y_2 = result.data.blocks[0].bbox.y1;
+
+                    
+
+                    //pdfFactory.createSquareAnnotation(pageNum, selectionCoordinates(),"","");
+                    //renderPage(pageNum);
+                }
             });
         };
 
@@ -243,23 +226,62 @@
             activeElement.value = text;
         };
 
+        function handleResponse(response) {
+            // Do something with the response, such as updating the UI
+            console.log(response);
+            renderPage(pageNum);
+        }
+
+        function callMyAction(num, x1, y1, width, height) {
+            let name = document.querySelector("#Data_OutputPath").value;
+
+            var data = {
+                fileName: name,
+                x1: x1,
+                y1: y1,
+                width: width,
+                height: height,
+                pageNumber: num
+            };
+
+            $.ajax({
+                url: "/api/app/ocr/highlight",
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: handleResponse
+            });
+        }
+
+
         const inputs = document.querySelectorAll('input');
+        //document.querySelector('select.scale').value = RENDER_OPTIONS.scale;
+        function setScaleRotate(scaleSelection) {
+            if (scaleSelection === '3') {
+                isBestFit = true;
+            }
+            else {
+                isBestFit = false;
+                scaleSelection = parseFloat(scaleSelection, 10);
+                if (scaleSelection !== scale) {
+                    scale = scaleSelection;
+                    ///localStorage.setItem(RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
+                }
+            }
+            renderPage(pageNum);
+        }
+
+        function handleScaleChange(e) {
+            setScaleRotate(e.target.value);
+        }
+        document.getElementById('scaling').addEventListener('change', handleScaleChange);
 
         inputs.forEach(input => {
             input.addEventListener('blur', () => {
                 activeElement = input;
             });
         });
-
-        //document.getElementById('form-content').addEventListener('onblur', function (e) {
-        //    console.log('in abpFormContentOnblur');
-        //    console.log(activeElement);
-        //    var element = document.activeElement;
-        //    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-        //        console.log(activeElement);
-        //        activeElement = element;
-        //    }
-        //});
     };
     return {
         initModal: initModal
@@ -268,41 +290,4 @@
 
 
 
-//function getImage() {
-//    var rect = pdfViewerCanvas.getBoundingClientRect();
-//    var x = rect.left;
-//    var y = rect.top;
-//    var width = rect.width;
-//    var height = rect.height;
 
-//    console.log(rect);
-
-//    var newCanvas = document.createElement('canvas');
-//    newCanvas.width = width;
-//    newCanvas.height = height;
-//    var newCtx = newCanvas.getContext('2d');
-
-
-//    newCtx.drawImage(drawingCanvas, x, y, width, height, 0, 0, width, height);
-//    var imageData = newCanvas.toDataURL('image/tiff');
-
-//    // Convert the base64-encoded string to a binary TIFF file
-//    console.log(imageData);
-//    //var arrayBuffer = base64ToArrayBuffer(imageData.replace(/^data:image\/(tiff|png);base64,/, ''));
-//    //var tiff = new Tiff({ buffer: arrayBuffer });
-
-//    //// Save the TIFF file to disk
-//    //var blob = new Blob([tiff.toBuffer()], { type: 'image/tiff' });
-//    //saveAs(blob, 'selected-area.tiff');
-
-//}
-
-//function base64ToArrayBuffer(base64) {
-//    var binaryString = atob(base64);
-//    var len = binaryString.length;
-//    var bytes = new Uint8Array(len);
-//    for (var i = 0; i < len; i++) {
-//        bytes[i] = binaryString.charCodeAt(i);
-//    }
-//    return bytes.buffer;
-//}

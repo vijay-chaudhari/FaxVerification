@@ -1,15 +1,12 @@
-using AutoMapper.Internal.Mappers;
 using FaxVerification.Records;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
-using Volo.Abp.ObjectMapping;
 
 namespace FaxVerification.Web.Pages.OCR
 {
@@ -17,6 +14,7 @@ namespace FaxVerification.Web.Pages.OCR
     {
         [BindProperty]
         public EditDetailsViewModel Data { get; set; }
+
         private readonly IOcrAppService _ocrAppService;
         public EditModalModel(IOcrAppService ocrAppService)
         {
@@ -35,6 +33,7 @@ namespace FaxVerification.Web.Pages.OCR
             Data.Output = ImageOcrDto.Output;
             Data.PersonDetails = JsonSerializer.Deserialize<TextExtractionFields>(ImageOcrDto.Output);
         }
+
         public async Task<IActionResult> OnPostAsync()
         {
             await _ocrAppService.UpdateAsync(
@@ -48,8 +47,15 @@ namespace FaxVerification.Web.Pages.OCR
                     InputPath = Data.InputPath
                 });
 
-            return new NoContentResult(); ;
+            return new NoContentResult();
         }
+
+        public async Task<IActionResult> OnPostHighlight(Request request)
+        {
+
+            return new NoContentResult();
+        }
+
         public class EditDetailsViewModel
         {
             [HiddenInput]
@@ -69,41 +75,8 @@ namespace FaxVerification.Web.Pages.OCR
             public string FilePath { get; set; }
         }
 
-        //public class TextExtractionFields
-        //{
-        //    [HiddenInput]
-        //    public string Name { get; set; }
-        //    [HiddenInput]
-        //    public string BirthDate { get; set; }
-
-        //    [Display(Name = "Invoice Number")]
-        //    public string Invoice { get; set; }
-
-        //    [Display(Name = "Invoice Date")]
-        //    public string InvoiceDate { get; set; }
-        //    [Display(Name = "Payment Due Date")]
-        //    public string InvoiceDueDate { get; set; }
-        //    [Display(Name = "Purchase Order")]
-        //    public string OrderNumber { get; set; }
-        //    [Display(Name = "Total")]
-        //    public string TotalAmount { get; set; }
-        //    [Display(Name = "Tax")]
-        //    public string TaxAmount { get; set; }
-        //    [Display(Name = "Suplier Name")]
-        //    public string VendorName { get; set; }
-        //}
-
         public class TextExtractionFields
         {
-            //public string Name { get; set; }
-            //public string BirthDate { get; set; }
-            //public string Invoice { get; set; }
-            //public string InvoiceDate { get; set; }
-            //public string InvoiceDueDate { get; set; }
-            //public string OrderNumber { get; set; }
-            //public string TotalAmount { get; set; }
-            //public string TaxAmount { get; set; }
-            //public string VendorName { get; set; }
             public Invoice Invoice { get; set; }
             public TextExtractionFields()
             {
@@ -114,15 +87,21 @@ namespace FaxVerification.Web.Pages.OCR
         public class Invoice
         {
             [Display(Name = "Invoice Number")]
-           
             public string Number { get; set; }
+
             [Display(Name = "Invoice Date")]
             public string Date { get; set; }
-            [Display(Name = "Purchase Order Date")]
-            public string OrderDate { get; set; }
+
             [Display(Name = "Purchase Order")]
             public string PurchaseOrderNumber { get; set; }
-            [Display(Name = "Currency"), ]
+
+
+            [Display(Name = "Purchase Order Date")]
+            public string OrderDate { get; set; }
+
+
+
+            [HiddenInput]
             public string Currency { get; set; }
             public Supplier Supplier { get; set; }
             public Customer Customer { get; set; }
@@ -137,60 +116,103 @@ namespace FaxVerification.Web.Pages.OCR
 
         public class Supplier
         {
-            [Display(Name = "Supplier Company")]
+            [Display(Name = "Vendor Name")]
             public string CompanyName { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Supplier Address")]
             public string Address { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Supplier Number")]
             public string BusinessNumber { get; set; }
+
             [HiddenInput]
             public string PhoneNumber { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Supplier Fax")]
             public string Fax { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Supplier Email")]
             public string Email { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Supplier WebSite")]
             public string Website { get; set; }
         }
 
         public class Customer
         {
+            [HiddenInput]
             [Display(Name = "Customer ID")]
             public string Number { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Name")]
             public string Name { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Company Name")]
             public string CompanyName { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Biling Address")]
             public string BillingAddress { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Delivery Address")]
             public string DeliveryAddress { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Number")]
             public string BusinessNumber { get; set; }
+
             [HiddenInput]
             public string PhoneNumber { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Fax")]
             public string Fax { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Customer Email")]
             public string Email { get; set; }
         }
 
         public class Payment
         {
+            [HiddenInput]
             [Display(Name = "Payment Due Date")]
             public string DueDate { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Base Amount")]
             public string BaseAmount { get; set; }
             [Display(Name = "Tax")]
             public string Tax { get; set; }
             [Display(Name = "Gross Amount")]
             public string Total { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Paid Amount")]
             public string Paid { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Due Amount")]
             public string DueAmount { get; set; }
+
+            [HiddenInput]
             [Display(Name = "Payment Reference Number")]
             public string PaymentReference { get; set; }
+        }
+
+        public class Request 
+        {
+            public string FileName { get; set; }
+            public Rectangle rect { get; set; }
+            public int PageNumber { get; set; }
         }
     }
 }
