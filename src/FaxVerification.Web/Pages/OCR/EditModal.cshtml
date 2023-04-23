@@ -15,8 +15,6 @@
         position: absolute;
         width: 66%;
         height: 91%;
-        overflow-y: scroll;
-        overflow-x: auto;
     }
 
     #right {
@@ -44,34 +42,12 @@
 <abp-dynamic-form abp-model="Data" asp-page="/OCR/EditModal">
     <abp-modal size="Fullscreen">
         <abp-modal-body style="overflow:hidden">
-            <div id="content">
-                <div style="margin:10px">
-                    <abp-button id="prev" button-type="Primary" size=Small icon-type=FontAwesome icon="fa-regular fa-chevron-left" />
-                    <abp-button id="next" button-type="Primary" size=Small icon-type=FontAwesome icon="fa-regular fa-chevron-right" />
-                    <span>
-                        Page:
-                        <span id="page_num"></span> / <span id="page_count"></span>
-                    </span>
-                    <select id="scaling" class="scale" style="margin:10px">
-                        <option value=".5">50%</option>
-                        <option value="1">100%</option>
-                        <option value="1.33">133%</option>
-                        <option value="1.5">150%</option>
-                        <option value="2">200%</option>
-                        <option value="3" selected="selected">Best Fit</option>
-                    </select>
-                </div>
-
-                <div id="left">
-                    <div id="content-wrapper">
-                        <canvas id="pdfViewer"></canvas>
-                        <canvas id="drawCanvas"></canvas>
-                    </div>
-                </div>
-                <div id="right">
-                    <div id="form-content">
-                        <abp-form-content id="formID" />
-                    </div>
+            <div id="left">
+                <div style="width:100%; height:100%; position:absolute" id="viewer"></div>
+            </div>
+            <div id="right">
+                <div id="form-content">
+                    <abp-form-content id="formID" />
                 </div>
             </div>
         </abp-modal-body>
