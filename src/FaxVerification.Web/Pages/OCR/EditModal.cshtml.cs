@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static FaxVerification.Web.Pages.OCR.EditModalModel;
 
 namespace FaxVerification.Web.Pages.OCR
 {
@@ -77,27 +78,44 @@ namespace FaxVerification.Web.Pages.OCR
 
         public class TextExtractionFields
         {
+            public Patient Patient { get; set; }
             public Invoice Invoice { get; set; }
             public TextExtractionFields()
             {
                 Invoice = new();
+                Patient = new();
             }
         }
-
+        public class Patient
+        {
+            public string Name { get; set; }
+            public string BirthDate { get; set; }
+        }
         public class Invoice
         {
             [Display(Name = "Invoice Number")]
             public string Number { get; set; }
+            [HiddenInput]
+            public string InvNumCords { get; set; }
+
 
             [Display(Name = "Invoice Date")]
             public string Date { get; set; }
+            [HiddenInput]
+            public string InvDateCords { get; set; }
+
 
             [Display(Name = "Purchase Order")]
             public string PurchaseOrderNumber { get; set; }
+            [HiddenInput]
+            public string PurchaseOrderNumCords { get; set; }
 
 
             [Display(Name = "Purchase Order Date")]
             public string OrderDate { get; set; }
+            [HiddenInput]
+            public string OrderDateCords { get; set; }
+
 
 
 
@@ -118,6 +136,8 @@ namespace FaxVerification.Web.Pages.OCR
         {
             [Display(Name = "Vendor Name")]
             public string CompanyName { get; set; }
+            [HiddenInput]
+            public string VendorNameCord { get; set; }
 
             [HiddenInput]
             [Display(Name = "Supplier Address")]
@@ -192,8 +212,13 @@ namespace FaxVerification.Web.Pages.OCR
             public string BaseAmount { get; set; }
             [Display(Name = "Tax")]
             public string Tax { get; set; }
+            [HiddenInput]
+            public string TaxCord { get; set; }
+
             [Display(Name = "Gross Amount")]
             public string Total { get; set; }
+            [HiddenInput]
+            public string TotalCord { get; set; }
 
             [HiddenInput]
             [Display(Name = "Paid Amount")]
