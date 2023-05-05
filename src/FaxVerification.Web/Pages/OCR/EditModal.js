@@ -154,7 +154,7 @@
                         }
 
                         if (!result.quads.length) {
-
+                            return;
                         };
 
                         const textQuad = result.quads[0].getPoints();
@@ -192,10 +192,10 @@
 
             const ConversionUtil = (cords) => {
                 const rect = {
-                    X1: cords[0] / 4.166666666666667,
-                    Y1: cords[1] / 4.166666666666667,
-                    X2: cords[2] / 4.166666666666667,
-                    Y2: cords[3] / 4.166666666666667
+                    X1: cords[0] / constant,
+                    Y1: cords[1] / constant,
+                    X2: cords[2] / constant,
+                    Y2: cords[3] / constant
                 };
 
                 var quad = new Annotations.Quad(
