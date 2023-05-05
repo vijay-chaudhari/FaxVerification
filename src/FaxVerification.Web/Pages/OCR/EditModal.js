@@ -1,6 +1,7 @@
 ﻿abp.modals.ProductInfo = function () {
     function initModal(modalManager, args) {
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
+        let constant = 4.166666666666667;
 
         WebViewer({
             path: "./libs/pdfjs-express",
@@ -97,46 +98,115 @@
             inputs.forEach(input => {
                 input.addEventListener('blur', () => {
                     activeElement = input;
-                    
                 });
                 input.addEventListener('click', () => {
-                    documentViewer.textSearchInit(input.value, searchMode, searchOptions);
+
+                    if (input.id === 'Data_PersonDetails_Invoice_Number') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvNumCords').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_Date') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvDateCords').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_PurchaseOrderNumber') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_PurchaseOrderNumCords').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_OrderDate') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_OrderDateCords').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_Supplier_CompanyName') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Supplier_VendorNameCord').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_Payment_Tax') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Payment_TaxCord').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_Payment_Total') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Payment_TotalCord').value.split(',');
+                        hightLightAnnnotation(cords);
+                    }
+                    //firstResultFound = false;
+                    //documentViewer.textSearchInit(input.value, searchMode, searchOptions);
                 });
 
             });
+
+            let firstResultFound = false;
+            let previousHighlightAnnot = null;
 
             const getPageCanvas = pageIndex => {
                 return instance.iframeWindow.document.querySelector('#pageContainer' + pageIndex + ' .canvas' + pageIndex);
             };
 
             const searchMode = instance.Core.Search.Mode.PAGE_STOP | instance.Core.Search.Mode.HIGHLIGHT;
+
             const searchOptions = {
-                fullSearch: true, // search the full document,
+                fullSearch: true,
                 onResult: (result) => {
                     if (result.resultCode === instance.Core.Search.ResultCode.FOUND) {
 
-                        if (!result.quads.length) return;
+                        if (firstResultFound) {
+                            return;
+                        }
+
+                        if (!result.quads.length) {
+
+                        };
 
                         const textQuad = result.quads[0].getPoints();
-                        const annot = new Annotations.TextHighlightAnnotation();
 
+                        hightLightAnnnotation(textQuad);
 
-                        annot.X = textQuad.x1;
-                        annot.Width = textQuad.x2 - textQuad.x1;
-                        annot.PageNumber = result.pageNum;
-                        annot.Y = textQuad.y3;
-                        annot.Height = textQuad.y1 - textQuad.y3;
-
-                        annot.FillColor = new Annotations.Color(0, 0, 255, 0.5);
-                        annot.StrokeColor = new Annotations.Color(0, 0, 255, 0.5);
-
-                        annot.Quads = [textQuad];
-
-                        annotationManager.addAnnotation(annot);
-                        annotationManager.drawAnnotationsFromList([annot])
+                        firstResultFound = true;
                     }
                 }
             }
+
+            const hightLightAnnnotation = (cords) => {
+
+                if (previousHighlightAnnot) {
+                    annotationManager.deleteAnnotation(previousHighlightAnnot);
+                }
+
+                let quad = ConversionUtil(cords);
+                const annot = new Annotations.TextHighlightAnnotation();
+                annot.X = quad.x1;
+                annot.Width = quad.x2 - quad.x1;
+                annot.PageNumber = 1;
+                annot.Y = quad.y3;
+                annot.Height = quad.y1 - quad.y3;
+
+                annot.FillColor = new Annotations.Color(0, 0, 255, 0.5);
+                annot.StrokeColor = new Annotations.Color(0, 0, 255, 0.5);
+
+                annot.Quads = [quad];
+
+                annotationManager.addAnnotation(annot);
+                annotationManager.drawAnnotationsFromList(annot)
+                previousHighlightAnnot = annot;
+            };
+
+            const ConversionUtil = (cords) => {
+                const rect = {
+                    X1: cords[0] / 4.166666666666667,
+                    Y1: cords[1] / 4.166666666666667,
+                    X2: cords[2] / 4.166666666666667,
+                    Y2: cords[3] / 4.166666666666667
+                };
+
+                var quad = new Annotations.Quad(
+                    rect.X1, rect.Y1,
+                    rect.X2, rect.Y1,
+                    rect.X2, rect.Y2,
+                    rect.X1, rect.Y2
+                );
+
+                return quad;
+            };
 
         });
     };

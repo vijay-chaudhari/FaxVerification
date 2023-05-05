@@ -88,7 +88,9 @@ namespace FaxVerification.Web.Pages.OCR
         }
         public class Patient
         {
+            [HiddenInput]
             public string Name { get; set; }
+            [HiddenInput]
             public string BirthDate { get; set; }
         }
         public class Invoice
