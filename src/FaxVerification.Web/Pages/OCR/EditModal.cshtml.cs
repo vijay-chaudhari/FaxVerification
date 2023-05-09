@@ -1,11 +1,14 @@
 using FaxVerification.Records;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static FaxVerification.Web.Pages.OCR.EditModalModel;
 
@@ -88,50 +91,71 @@ namespace FaxVerification.Web.Pages.OCR
         }
         public class Patient
         {
-            [HiddenInput]
-            public string Name { get; set; }
-            [HiddenInput]
-            public string BirthDate { get; set; }
+            public PatientName Name { get; set; }
+            public PatientBirthDate BirthDate { get; set; }
+
+            //[HiddenInput]
+            //public string Name { get; set; }
+            //[HiddenInput]
+            //public string BirthDate { get; set; }
         }
         public class Invoice
         {
-            [Display(Name = "Invoice Number")]
-            public string Number { get; set; }
-            [HiddenInput]
-            public string InvNumCords { get; set; }
+            public InvoiceNumber InvNum { get; set; }
+            public InvoiceDate InvDate { get; set; }
+            public PurchaseOrder OrderNum { get; set; }
+            public PurchaseOrderDate OrderDate { get; set; }
+            public VendorName VendorName { get; set; }
+            public Tax Tax { get; set; }
+            public GrossAmount Total { get; set; }
 
-
-            [Display(Name = "Invoice Date")]
-            public string Date { get; set; }
-            [HiddenInput]
-            public string InvDateCords { get; set; }
-
-
-            [Display(Name = "Purchase Order")]
-            public string PurchaseOrderNumber { get; set; }
-            [HiddenInput]
-            public string PurchaseOrderNumCords { get; set; }
-
-
-            [Display(Name = "Purchase Order Date")]
-            public string OrderDate { get; set; }
-            [HiddenInput]
-            public string OrderDateCords { get; set; }
-
-
-
-
-            [HiddenInput]
-            public string Currency { get; set; }
-            public Supplier Supplier { get; set; }
-            public Customer Customer { get; set; }
-            public Payment Payment { get; set; }
             public Invoice()
             {
-                Supplier = new();
-                Customer = new();
-                Payment = new();
+                InvNum = new();
+                InvDate = new();
+                OrderNum = new();
+                OrderDate = new();
+                VendorName = new();
+                Tax = new();
+                Total = new();
             }
+
+
+
+            //[Display(Name = "Invoice Number")]
+            //public string Number { get; set; }
+            //[HiddenInput]
+            //public string InvNumCords { get; set; }
+
+
+            //[Display(Name = "Invoice Date")]
+            //public string Date { get; set; }
+            //[HiddenInput]
+            //public string InvDateCords { get; set; }
+
+
+            //[Display(Name = "Purchase Order")]
+            //public string PurchaseOrderNumber { get; set; }
+            //[HiddenInput]
+            //public string PurchaseOrderNumCords { get; set; }
+
+
+            //[Display(Name = "Purchase Order Date")]
+            //public string OrderDate { get; set; }
+            //[HiddenInput]
+            //public string OrderDateCords { get; set; }
+
+            //[HiddenInput]
+            //public string Currency { get; set; }
+            //public Supplier Supplier { get; set; }
+            //public Customer Customer { get; set; }
+            //public Payment Payment { get; set; }
+            //public Invoice()
+            //{
+            //    Supplier = new();
+            //    Customer = new();
+            //    Payment = new();
+            //}
         }
 
         public class Supplier
@@ -240,6 +264,97 @@ namespace FaxVerification.Web.Pages.OCR
             public string FileName { get; set; }
             public Rectangle rect { get; set; }
             public int PageNumber { get; set; }
+        }
+
+        public class PatientName
+        {
+            
+            [Display(Name = "Patient Name")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
+        }
+
+        public class PatientBirthDate
+        {
+           
+            [Display(Name = "Birth Date")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
+        }
+        public class InvoiceNumber
+        {
+            [Display(Name = "Invoice Number")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
+        }
+        public class InvoiceDate
+        {
+            [Display(Name = "Invoice Date")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
+        }
+        public class PurchaseOrder
+        {
+            [Display(Name = "Purchase Order")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
+        }
+        public class PurchaseOrderDate
+        {
+            [Display(Name = "Purchase Order Date")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+        }
+        public class VendorName
+        {
+            [Display(Name = "Vendor Name")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+        }
+        public class Tax
+        {
+            [Display(Name = "Tax")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+        }
+        public class GrossAmount
+        {
+            [Display(Name = "Gross Amount")]
+            public string Text { get; set; }
+            [HiddenInput]
+            public int PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿abp.modals.ProductInfo = function () {
     function initModal(modalManager, args) {
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
-        let constant = 4.166666666666667;
 
         WebViewer({
             path: "./libs/pdfjs-express",
@@ -9,12 +8,9 @@
             preloadWorker: WebViewer.WorkerTypes.PDF,
             initialDoc: fileName,
         }, document.getElementById('viewer')).then(instance => {
+
             var Feature = instance.Feature;
             instance.disableFeatures([Feature.Search]);
-            //instance.UI.disableElements(['ribbons']);
-            //instance.UI.disableElements(['menuButton']);
-            //instance.UI.disableElements(['toggleNotesButton']);
-            //instance.UI.setToolbarGroup(instance.UI.ToolbarGroup.VIEW);
             instance.UI.setToolMode(instance.Core.Tools.ToolNames.RECTANGLE);
             instance.UI.setTheme('dark');
 
@@ -25,7 +21,6 @@
                 annotationManager,
                 Annotations,
             } = instance.Core;
-
 
             documentViewer.one('documentLoaded', async () => {
 
@@ -40,18 +35,21 @@
                             const doc = documentViewer.getDocument();
                             const pageIndex = documentViewer.getCurrentPage();
                             const rect = rectangleAnnotation.getRect();
-
-                            doc.getTextByPageAndRect(pageIndex, rect).then(text => {
-                                if (!text) {
-                                    getImage(rect, pageIndex);
-                                }
-                                else {
-                                    setText(text);
-                                }
-                                setTimeout(() => {
-                                    annotationManager.deleteAnnotation(rectangleAnnotation);
-                                }, 1000);
-                            });
+                            getImage(rect, pageIndex);
+                            setTimeout(() => {
+                                annotationManager.deleteAnnotation(rectangleAnnotation);
+                            }, 1000);
+                            //doc.getTextByPageAndRect(pageIndex, rect).then(text => {
+                            //    if (!text) {
+                            //        getImage(rect, pageIndex);
+                            //    }
+                            //    else {
+                            //        setText(text);
+                            //    }
+                            //    setTimeout(() => {
+                            //        annotationManager.deleteAnnotation(rectangleAnnotation);
+                            //    }, 1000);
+                            //});
                         }
                     }
 
@@ -82,60 +80,172 @@
                 ctx.drawImage(pageCanvas, x, y, width, height, 0, 0, width, height);
 
                 var imageData = copyCanvas.toDataURL('image/tiff');
-                getText(imageData);
+                getText(imageData, rect, pageIndex);
             };
 
-            const getText = imageData => {
+            const getText = (imageData, rect, pageIndex) => {
                 Tesseract.recognize(imageData, 'eng').then(function (result) {
-                    setText(result.data.text);
+                    if (result.data.text) {
+                        setText(result.data.text, rect, pageIndex);
+                    }
+
                 });
             };
 
-            const setText = text => {
+            const setText = (text, rect, pageIndex) => {
                 activeElement.value = text;
+                const cords = `${rect.x1}, ${rect.y1}, ${rect.x2}, ${rect.y2}`;
+                conversionRequired = false;
+
+                if (activeElement.id === 'Data_PersonDetails_Patient_Name_Text') {
+                    document.querySelector('#Data_PersonDetails_Patient_Name_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Patient_Name_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Patient_BirthDate_Text') {
+                    document.querySelector('#Data_PersonDetails_Patient_BirthDate_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Patient_BirthDate_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+
+                if (activeElement.id === 'Data_PersonDetails_Invoice_InvNum_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_InvNum_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_InvNum_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_InvDate_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_InvDate_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_InvDate_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_OrderNum_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_OrderNum_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_OrderNum_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_OrderDate_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_OrderDate_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_OrderDate_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_VendorName_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_VendorName_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_VendorName_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_Tax_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_Tax_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_Tax_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
+                if (activeElement.id === 'Data_PersonDetails_Invoice_Total_Text') {
+                    document.querySelector('#Data_PersonDetails_Invoice_Total_Rectangle').value = cords;
+                    document.querySelector('#Data_PersonDetails_Invoice_Total_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+                }
             };
 
             inputs.forEach(input => {
-                input.addEventListener('blur', () => {
-                    activeElement = input;
-                });
                 input.addEventListener('click', () => {
+                    activeElement = input;
+                    if (input.id === 'Data_PersonDetails_Patient_Name_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Patient_Name_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Patient_Name_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                    }
+                    if (input.id === 'Data_PersonDetails_Patient_BirthDate_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Patient_BirthDate_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Patient_BirthDate_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                    }
+                    if (input.id === 'Data_PersonDetails_Invoice_InvNum_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvNum_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_InvNum_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
 
-                    if (input.id === 'Data_PersonDetails_Invoice_Number') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvNumCords').value.split(',');
-                        hightLightAnnnotation(cords);
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_Date') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvDateCords').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_InvDate_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_InvDate_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_InvDate_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_PurchaseOrderNumber') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_PurchaseOrderNumCords').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_OrderNum_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_OrderNum_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_OrderNum_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_OrderDate') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_OrderDateCords').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_OrderDate_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_OrderDate_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_OrderDate_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_Supplier_CompanyName') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Supplier_VendorNameCord').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_VendorName_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_VendorName_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_VendorName_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_Payment_Tax') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Payment_TaxCord').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_Tax_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Tax_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_Tax_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
-                    if (input.id === 'Data_PersonDetails_Invoice_Payment_Total') {
-                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Payment_TotalCord').value.split(',');
-                        hightLightAnnnotation(cords);
+                    if (input.id === 'Data_PersonDetails_Invoice_Total_Text') {
+                        let cords = document.querySelector('#Data_PersonDetails_Invoice_Total_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_PersonDetails_Invoice_Total_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
                     }
                     //firstResultFound = false;
                     //documentViewer.textSearchInit(input.value, searchMode, searchOptions);
                 });
-
             });
 
             let firstResultFound = false;
+
             let previousHighlightAnnot = null;
 
             const getPageCanvas = pageIndex => {
@@ -166,17 +276,16 @@
                 }
             }
 
-            const hightLightAnnnotation = (cords) => {
+            const hightLightAnnnotation = (cords, pageNum) => {
 
-                if (previousHighlightAnnot) {
-                    annotationManager.deleteAnnotation(previousHighlightAnnot);
-                }
+                removeAnnotation();
 
                 let quad = ConversionUtil(cords);
+
                 const annot = new Annotations.TextHighlightAnnotation();
                 annot.X = quad.x1;
                 annot.Width = quad.x2 - quad.x1;
-                annot.PageNumber = 1;
+                annot.PageNumber = pageNum;
                 annot.Y = quad.y3;
                 annot.Height = quad.y1 - quad.y3;
 
@@ -184,30 +293,42 @@
                 annot.StrokeColor = new Annotations.Color(0, 0, 255, 0.5);
 
                 annot.Quads = [quad];
-
                 annotationManager.addAnnotation(annot);
                 annotationManager.drawAnnotationsFromList(annot)
                 previousHighlightAnnot = annot;
             };
 
+            const scrollToPage = (pageNum) => {
+                documentViewer.setCurrentPage(pageNum, true);
+            };
+
             const ConversionUtil = (cords) => {
+
                 const rect = {
-                    X1: cords[0] / constant,
-                    Y1: cords[1] / constant,
-                    X2: cords[2] / constant,
-                    Y2: cords[3] / constant
+                    X1: cords[0],
+                    Y1: cords[1],
+                    X2: cords[2],
+                    Y2: cords[3]
                 };
 
-                var quad = new Annotations.Quad(
+                const quad = new Annotations.Quad(
                     rect.X1, rect.Y1,
                     rect.X2, rect.Y1,
                     rect.X2, rect.Y2,
                     rect.X1, rect.Y2
                 );
-
                 return quad;
             };
 
+            const IsNotZero = (num) => {
+                return num > 0;
+            }
+
+            const removeAnnotation = () => {
+                if (previousHighlightAnnot) {
+                    annotationManager.deleteAnnotation(previousHighlightAnnot);
+                }
+            }
         });
     };
     return {
