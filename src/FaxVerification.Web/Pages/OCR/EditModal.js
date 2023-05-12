@@ -3,7 +3,7 @@
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
 
         WebViewer({
-            path: "./libs/pdfjs-express",
+            path: "./libs/pdfjs-express/lib",
             disabledElements: ['ribbons', 'menuButton', 'toggleNotesButton'],
             preloadWorker: WebViewer.WorkerTypes.PDF,
             initialDoc: fileName,

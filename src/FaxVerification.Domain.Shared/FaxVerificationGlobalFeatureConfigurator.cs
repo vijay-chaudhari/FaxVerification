@@ -18,5 +18,7 @@ public static class FaxVerificationGlobalFeatureConfigurator
                  * https://docs.abp.io/en/abp/latest/Global-Features
                  */
         });
+
     }
+
 }

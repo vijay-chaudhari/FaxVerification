@@ -6,6 +6,7 @@ using Volo.Abp.Identity;
 using Volo.Abp.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Modularity;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.OpenIddict;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
@@ -54,5 +55,11 @@ public class FaxVerificationDomainSharedModule : AbpModule
         {
             options.MapCodeNamespace("FaxVerification", typeof(FaxVerificationResource));
         });
+
+        Configure<AbpMultiTenancyOptions>(options =>
+        {
+            options.IsEnabled = true;
+        });
+
     }
 }
