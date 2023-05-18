@@ -41,6 +41,10 @@
     #selectionrect {
         border : 1px solid red;
     }
+
+    .Hide_attr{
+        display:none !important;
+    }
 </style>
 
 @*<abp-dynamic-form abp-model="Data" asp-page="/OCR/EditModal">
@@ -58,24 +62,70 @@
         <abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
     </abp-modal>
 </abp-dynamic-form>*@
-
+<form abp-model="Data" asp-page="/OCR/EditModal">
 <abp-modal size="Fullscreen">
     <abp-modal-body style="overflow:hidden">
         <div id="left">
             <div style="width:100%; height:100%; position:absolute" id="viewer"></div>
         </div>
         <div id="right">
-           @* <div id="form-content">
+          @* <div id="form-content">
                 <abp-form-content id="formID" />
             </div>*@
             <div class="form-group">
-                <label asp-for="Data.PersonDetails.Patient.Name" class="control-label"></label>
-                <input asp-for="Data.PersonDetails.Patient.Name" class="form-control" />
-                <label asp-for="Data.PersonDetails.Patient.BirthDate" class="control-label"></label>
-                <input asp-for="Data.PersonDetails.Patient.BirthDate" class="form-control" />
+
+                    @foreach(var item in Model.Data.FormConfiguration.Fields)
+                    {
+                        <label id="lbl_1" asp-for="@item.FieldName" class="control-label">@item.FieldName.ToString()</label>
+                        <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
+                    }
+
+                <label id="lbl_1" asp-for="Data.PersonDetails.Attribute_1" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
+
+                    <label id="lbl_2" asp-for="Data.PersonDetails.Attribute_2" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_2" class="form-control" />
+
+                    <label id="lbl_3" asp-for="Data.PersonDetails.Attribute_3" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_3" class="form-control" />
+
+                    <label id="lbl_4" asp-for="Data.PersonDetails.Attribute_4" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_4" class="form-control" />
+
+                    <label id="lbl_5" asp-for="Data.PersonDetails.Attribute_5" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_5" class="form-control" />
+
+                    <label id="lbl_6" asp-for="Data.PersonDetails.Attribute_6" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_6" class="form-control" />
+
+                    <label id="lbl_7" asp-for="Data.PersonDetails.Attribute_7" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_7" class="form-control" />
+
+                    <label id="lbl_8" asp-for="Data.PersonDetails.Attribute_8" class="control-label"></label>
+                <input asp-for="Data.PersonDetails.Attribute_8" class="form-control" />
+
                 <input asp-for="Data.FilePath" class="form-control" />
+                <input asp-for="Data.Output" class="form-control" />
+                <input asp-for="Data.Confidence" class="form-control" />
+                <input asp-for="Data.InputPath" class="form-control" />
+                <input asp-for="Data.OCRText" class="form-control" />
+                <input asp-for="Data.OutputPath" class="form-control" />
+                <input asp-for="Data.Id" class="form-control" />
+
+                <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_2" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_3" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_4" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_5" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_6" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_7" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_8" class="form-control" />
+                    <input asp-for="Data.FormConfiguration" class="form-control" />
+
+
             </div>
         </div>
     </abp-modal-body>
     <abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
 </abp-modal>
+</form>

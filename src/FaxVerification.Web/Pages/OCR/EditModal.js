@@ -1,5 +1,29 @@
 ﻿abp.modals.ProductInfo = function () {
     function initModal(modalManager, args) {
+
+        //$(document).ready(function () {
+        //    debugger;
+        //    var Configuration = document.querySelector('#Data_FormConfiguration').value.split('~');
+        //    var NameValue = Configuration.length;
+        //    for (var i = 1; i < 9; i++) {
+
+        //        if ((i-1) < NameValue) {
+
+        //            document.querySelector('#lbl_' + i).innerHTML = Configuration[(i - 1)];
+        //            document.querySelector('#lbl_' + i).classList.remove("Hide_attr");
+        //            //document.querySelector('#Data_PersonDetails_Attribute_1').classList.remove("Hide_attr")
+        //            document.querySelector('#Data_PersonDetails_Attribute_' + i).classList.remove("Hide_attr");
+        //        }
+        //        else {
+        //            document.querySelector('#lbl_' + i).classList.add("Hide_attr");
+        //            document.querySelector('#Data_PersonDetails_Attribute_' + i).classList.add("Hide_attr");
+        //        }
+
+        //    }
+
+
+        //});
+
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
 
         WebViewer({
@@ -94,7 +118,7 @@
 
             const setText = (text, rect, pageIndex) => {
                 activeElement.value = text;
-                const cords = `${rect.x1}, ${rect.y1}, ${rect.x2}, ${rect.y2}`;
+                const cords = `${rect.x1},${rect.y1},${rect.x2},${rect.y2}`;
                 conversionRequired = false;
 
                 if (activeElement.id === 'Data_PersonDetails_Patient_Name_Text') {
@@ -143,6 +167,21 @@
                     document.querySelector('#Data_PersonDetails_Invoice_Total_PageNumber').value = pageIndex;
                     hightLightAnnnotation(cords.split(','), pageIndex);
                 }
+
+                if (activeElement.id.includes("Attribute_")) {
+                    //alert(activeElement.id);
+                    var elecmetID = activeElement.id.split('_');
+                    var elemid = elecmetID[3];
+
+                    var chords_pageNo = cords + "," + pageIndex;
+
+                    document.querySelector('#Data_PersonDetails_AttributeCords_' + elemid).value = chords_pageNo;
+                    //document.querySelector('#Data_PersonDetails_Invoice_Total_PageNumber').value = pageIndex;
+                    hightLightAnnnotation(cords.split(','), pageIndex);
+
+                }
+
+
             };
 
             inputs.forEach(input => {
@@ -237,6 +276,25 @@
                         }
                         else {
                             removeAnnotation();
+                        }
+                    }
+
+                    if (input.id.includes("Attribute_")) {
+                        //debugger;
+                        //alert(activeElement.id);
+                        var elecmetID = activeElement.id.split('_');
+                        var elemid = elecmetID[3];
+
+                        var cordinates = document.querySelector('#Data_PersonDetails_AttributeCords_' + elemid).value.split(',');
+                        var page = cordinates[4];
+                        cordinates.pop();
+
+
+                        let cords = cordinates;
+                        let pageNum = page;// document.querySelector('#Data_PersonDetails_Patient_Name_PageNumber').value;
+                        if (cords.every(IsNotZero) && cordinates.length >0) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
                         }
                     }
                     //firstResultFound = false;
@@ -335,6 +393,12 @@
         initModal: initModal
     };
 };
+
+
+//document.onload = function () {
+
+
+//};
 
 
 //This code works but we have short alternative for this

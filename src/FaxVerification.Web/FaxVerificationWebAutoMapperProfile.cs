@@ -11,6 +11,7 @@ public class FaxVerificationWebAutoMapperProfile : Profile
         //Define your AutoMapper configuration here for the Web project.
         CreateMap<OcrDto, Pages.OCR.EditModalModel.EditDetailsViewModel>()
             .ForMember(x=>x.PersonDetails, opt=>opt.Ignore())
+            .ForMember(x=>x.FormConfiguration, opt=>opt.Ignore())
             .ForMember(x=>x.FilePath, opt=>opt.Ignore());
     }
 }

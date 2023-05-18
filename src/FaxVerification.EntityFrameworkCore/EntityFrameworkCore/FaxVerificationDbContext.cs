@@ -1,4 +1,6 @@
-﻿using FaxVerification.Records;
+﻿
+using FaxVerification.Configuration;
+using FaxVerification.Records;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -56,6 +58,7 @@ public class FaxVerificationDbContext :
 
 
     public DbSet<ImageOcr> Records { get; set; }
+    public DbSet<AttributeConfig> AttributeConfig  { get; set; }
     public FaxVerificationDbContext(DbContextOptions<FaxVerificationDbContext> options)
         : base(options)
     {
@@ -91,5 +94,11 @@ public class FaxVerificationDbContext :
             b.ToTable(FaxVerificationConsts.DbTablePrefix + "ImageOcr", FaxVerificationConsts.DbSchema).HasKey(x=>x.Id);
             b.ConfigureByConvention();
         });
+
+        //builder.Entity<AttributeConfig>(b =>
+        //{
+        //    b.ToTable(FaxVerificationConsts.DbTablePrefix + "AttributeConfiguration", FaxVerificationConsts.DbSchema).HasKey(x => x.Id);
+        //    b.ConfigureByConvention();
+        //});
     }
 }

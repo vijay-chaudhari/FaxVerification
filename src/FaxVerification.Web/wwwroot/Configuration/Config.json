@@ -1,0 +1,24 @@
+{
+
+  "Fields": [
+    {
+      "FieldName": "Paitent Name",
+      "RegExpression": null,
+      "CoOrdinates": null
+    },
+    {
+      "FieldName": "Age",
+      "RegExpression": null,
+      "CoOrdinates": null
+    },
+    {
+      "FieldName": "Birth Date",
+      "RegExpression": null,
+      "CoOrdinates": null
+    }
+  ]
+
+
+
+
+}

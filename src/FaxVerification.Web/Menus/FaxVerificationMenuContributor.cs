@@ -58,6 +58,12 @@ public class FaxVerificationMenuContributor : IMenuContributor
                 l["Menu:Validate"],
                 url: "/OCR"
                 ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
+            ).AddItem(
+                new ApplicationMenuItem(
+                "Configuration.Validate",
+                l["Configuration"],
+                url: "/Configuration"
+                ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
             )
          );
     }
