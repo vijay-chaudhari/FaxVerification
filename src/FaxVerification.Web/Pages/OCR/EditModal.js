@@ -4,7 +4,7 @@
 
         WebViewer({
             path: "./libs/pdfjs-express",
-            disabledElements: ['ribbons', 'menuButton', 'toggleNotesButton'],
+            disabledElements: ['ribbons', 'menuButton', 'toggleNotesButton','toolsHeader'],
             preloadWorker: WebViewer.WorkerTypes.PDF,
             initialDoc: fileName,
         }, document.getElementById('viewer')).then(instance => {
@@ -12,6 +12,7 @@
             var Feature = instance.Feature;
             instance.disableFeatures([Feature.Search]);
             instance.UI.setToolMode(instance.Core.Tools.ToolNames.RECTANGLE);
+            instance.UI.disableElements(['ribbons']);
             instance.UI.setTheme('dark');
 
             const inputs = document.querySelectorAll('input');

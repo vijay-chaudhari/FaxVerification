@@ -268,7 +268,7 @@ namespace FaxVerification.Web.Pages.OCR
 
         public class PatientName
         {
-            
+            [HiddenInput]
             [Display(Name = "Patient Name")]
             public string Text { get; set; }
             [HiddenInput]
@@ -280,7 +280,7 @@ namespace FaxVerification.Web.Pages.OCR
 
         public class PatientBirthDate
         {
-           
+            [HiddenInput]
             [Display(Name = "Birth Date")]
             public string Text { get; set; }
             [HiddenInput]
