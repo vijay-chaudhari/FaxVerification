@@ -6,19 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
 using Volo.Abp.Data;
 using Volo.Abp.Users;
 using static FaxVerification.Web.Pages.OCR.EditModalModel;
 
 namespace FaxVerification.Web.Pages.Configuration
 {
-    public class IndexModel : PageModel
+    public class IndexModel : FaxVerificationPageModel
     {
         [BindProperty]
-        public EditDetailsViewModel Data { get; set; }
+        //public EditDetailsViewModel Data { get; set; }
+        public ConfigurationSettViewModel Data { get; set; } 
+        
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment Environment;
 
@@ -26,11 +30,13 @@ namespace FaxVerification.Web.Pages.Configuration
         {
             _configuration = configuration;
             Environment = _environment;
-            Data = new EditDetailsViewModel();
-            Data.PersonDetails = new DynamicViewModel();
-            Data.FormConfiguration = new ConfigurationSettViewModel();
+            //Data = new EditDetailsViewModel();
+            //Data.PersonDetails = new DynamicViewModel();
+            //Data.FormConfiguration = new ConfigurationSettViewModel();
 
-           
+            Data = new ConfigurationSettViewModel();
+
+
         }
         public void OnGet()
         {
@@ -40,8 +46,9 @@ namespace FaxVerification.Web.Pages.Configuration
             //string[] filePaths = Directory.GetFiles(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
-            ConfigurationSettViewModel person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
-            Data.FormConfiguration = person;
+            //ConfigurationSettViewModel person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
+            Data = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
+            //Data.FormConfiguration = person;
 
             //string[] ConfigArrray = Formconfigutration.Split('~');
             //if (ConfigArrray.Length >= 8)
@@ -63,12 +70,18 @@ namespace FaxVerification.Web.Pages.Configuration
 
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public void OnPost()
+        {
+            var a = Data;
+        }
+
+        [HttpPost]
+        public IActionResult OnSave()
         {
             //var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
             var filepath = Path.Combine(Environment.WebRootPath, "Configuration/Config.json");
 
-            var userData = JsonSerializer.Serialize<ConfigurationSettViewModel>(Data.FormConfiguration);
+            var userData = JsonSerializer.Serialize<ConfigurationSettViewModel>(Data);
 
             System.IO.File.WriteAllText(@filepath, userData);
 

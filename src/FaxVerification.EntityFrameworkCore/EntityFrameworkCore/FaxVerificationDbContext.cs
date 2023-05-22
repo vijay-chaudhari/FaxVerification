@@ -58,7 +58,7 @@ public class FaxVerificationDbContext :
 
 
     public DbSet<ImageOcr> Records { get; set; }
-    public DbSet<AttributeConfig> AttributeConfig  { get; set; }
+    public DbSet<ConfigurationSettings> AttributeConfig  { get; set; }
     public FaxVerificationDbContext(DbContextOptions<FaxVerificationDbContext> options)
         : base(options)
     {
@@ -82,12 +82,6 @@ public class FaxVerificationDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(FaxVerificationConsts.DbTablePrefix + "YourEntities", FaxVerificationConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
 
         builder.Entity<ImageOcr>(b =>
         {
@@ -95,10 +89,17 @@ public class FaxVerificationDbContext :
             b.ConfigureByConvention();
         });
 
-        //builder.Entity<AttributeConfig>(b =>
-        //{
-        //    b.ToTable(FaxVerificationConsts.DbTablePrefix + "AttributeConfiguration", FaxVerificationConsts.DbSchema).HasKey(x => x.Id);
-        //    b.ConfigureByConvention();
-        //});
+        builder.Entity<FieldConfig>(b =>
+        {
+            b.ToTable(FaxVerificationConsts.DbTablePrefix + "FieldConfig", FaxVerificationConsts.DbSchema);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<ConfigurationSettings>(b =>
+        {
+            b.ToTable(FaxVerificationConsts.DbTablePrefix + "ConfigurationSettings", FaxVerificationConsts.DbSchema).HasKey(x => x.Id);
+            b.ConfigureByConvention();
+            b.HasMany(x => x.Fields).WithOne(x => x.ConfigurationSetting).HasForeignKey(x => x.TemplateId).IsRequired(false);
+        });
     }
 }

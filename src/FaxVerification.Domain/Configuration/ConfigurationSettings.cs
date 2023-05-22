@@ -3,32 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace FaxVerification.Configuration
 {
-    public class ConfigurationSettings
+    public class ConfigurationSettings : FullAuditedAggregateRoot<Guid>
     {
-        public Guid TemplateId { get; set; }
         public string TemplateName { get; set; }
-        public List<FieldsModel> Fields { get; set; }
-        public List<FieldsValueModel> FieldValue { get; set; }
+        public List<FieldConfig> Fields { get; set; }
+
+        public ConfigurationSettings()
+        {
+            Fields = new List<FieldConfig>();
+        }
+        
     }
-
-
-    public class FieldsModel
-    {
-        public string FieldName { get; set; }
-        public string RegExpression { get; set; }
-        public string CoOrdinates { get; set; }
-    }
-
-    public class FieldsValueModel
-    {
-        public string FieldName { get; set; }
-        public string Value { get; set; }
-        public string CoOrdinates { get; set; }
-    }
-
-
-
 }

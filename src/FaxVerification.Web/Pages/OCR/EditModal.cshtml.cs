@@ -126,15 +126,15 @@ namespace FaxVerification.Web.Pages.OCR
             public string Output { get; set; }
             [HiddenInput]
             public string FilePath { get; set; }
-
+            [HiddenInput]
             public ConfigurationSettViewModel FormConfiguration { get; set; }
         }
 
         public class ConfigurationSettViewModel
         {
             public string TemplateName { get; set; }
-            public List<FieldsModel> Fields { get; set; }
-            public List<FieldsValueModel> FieldValue { get; set; }
+            public List<FieldConfig> Fields { get; set; }
+           // public List<FieldsValueModel> FieldValue { get; set; }
         }
 
 
