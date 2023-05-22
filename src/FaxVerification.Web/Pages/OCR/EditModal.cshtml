@@ -73,13 +73,20 @@
                 <abp-form-content id="formID" />
             </div>*@
             <div class="form-group">
+                    @{
+                        int i = 0;
 
-                    @foreach(var item in Model.Data.FormConfiguration.Fields)
+                        @foreach (var item in Model.Configu.Fields)
                     {
-                        <label id="lbl_1" asp-for="@item.FieldName" class="control-label">@item.FieldName.ToString()</label>
-                        <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
+                            i ++;
+                            string ValueID = "Attribute_" + i; 
+                            string CordinateValueID = "AttributeCord_" + i; 
+                            <label id="lbl_1" asp-for="@item.FieldName" class="control-label">@item.FieldName.ToString()</label>
+                            <input asp-for="@ValueID" class="form-control" value="@item.RegExpression" />
+                            <input asp-for="@CordinateValueID" class="form-control Hide_attr" value="@item.RegExpression" />
                     }
-
+                    }
+@*
                 <label id="lbl_1" asp-for="Data.PersonDetails.Attribute_1" class="control-label"></label>
                 <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
 
@@ -102,7 +109,7 @@
                 <input asp-for="Data.PersonDetails.Attribute_7" class="form-control" />
 
                     <label id="lbl_8" asp-for="Data.PersonDetails.Attribute_8" class="control-label"></label>
-                <input asp-for="Data.PersonDetails.Attribute_8" class="form-control" />
+                <input asp-for="Data.PersonDetails.Attribute_8" class="form-control" />*@
 
                 <input asp-for="Data.FilePath" class="form-control" />
                 <input asp-for="Data.Output" class="form-control" />

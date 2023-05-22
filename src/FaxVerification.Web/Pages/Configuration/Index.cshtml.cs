@@ -28,6 +28,7 @@ namespace FaxVerification.Web.Pages.Configuration
             Environment = _environment;
             Data = new EditDetailsViewModel();
             Data.PersonDetails = new DynamicViewModel();
+            Data.FormConfiguration = new ConfigurationSettViewModel();
 
            
         }
@@ -39,7 +40,7 @@ namespace FaxVerification.Web.Pages.Configuration
             //string[] filePaths = Directory.GetFiles(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
-            var person = JsonSerializer.Deserialize<ConfigurationSettings>(fileContents);
+            ConfigurationSettViewModel person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
             Data.FormConfiguration = person;
 
             //string[] ConfigArrray = Formconfigutration.Split('~');
@@ -67,7 +68,7 @@ namespace FaxVerification.Web.Pages.Configuration
             //var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
             var filepath = Path.Combine(Environment.WebRootPath, "Configuration/Config.json");
 
-            var userData = JsonSerializer.Serialize<ConfigurationSettings>(Data.FormConfiguration);
+            var userData = JsonSerializer.Serialize<ConfigurationSettViewModel>(Data.FormConfiguration);
 
             System.IO.File.WriteAllText(@filepath, userData);
 

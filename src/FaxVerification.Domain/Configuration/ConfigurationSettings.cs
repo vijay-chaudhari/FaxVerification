@@ -8,7 +8,8 @@ namespace FaxVerification.Configuration
 {
     public class ConfigurationSettings
     {
-        public int TemplateId { get; set; }
+        public Guid TemplateId { get; set; }
+        public string TemplateName { get; set; }
         public List<FieldsModel> Fields { get; set; }
         public List<FieldsValueModel> FieldValue { get; set; }
     }

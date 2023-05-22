@@ -120,6 +120,7 @@
                 activeElement.value = text;
                 const cords = `${rect.x1},${rect.y1},${rect.x2},${rect.y2}`;
                 conversionRequired = false;
+                debugger;
 
                 if (activeElement.id === 'Data_PersonDetails_Patient_Name_Text') {
                     document.querySelector('#Data_PersonDetails_Patient_Name_Rectangle').value = cords;

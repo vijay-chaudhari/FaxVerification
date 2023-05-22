@@ -26,6 +26,8 @@ namespace FaxVerification.Web.Pages.OCR
     {
         [BindProperty]
         public EditDetailsViewModel Data { get; set; }
+        [BindProperty]
+        public ConfigurationSettViewModel Configu { get; set; }
         //IConfiguration Configuration;
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment Environment;
@@ -36,6 +38,8 @@ namespace FaxVerification.Web.Pages.OCR
             _configuration = configuration;
             Environment = _environment;
             Data = new EditDetailsViewModel();
+            Data.FormConfiguration = new ConfigurationSettViewModel();
+            Configu = new ConfigurationSettViewModel();
         }
         public async Task OnGetAsync(Guid id)
         {
@@ -53,7 +57,7 @@ namespace FaxVerification.Web.Pages.OCR
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
 
-            var person = JsonSerializer.Deserialize<ConfigurationSettings>(fileContents);
+            var person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
 
 
             //string Formconfigutration = "";
@@ -76,10 +80,12 @@ namespace FaxVerification.Web.Pages.OCR
 
 
             Data.FormConfiguration = person;
+            Configu = person;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var a = Configu;
             await _ocrAppService.UpdateAsync(
                 Data.Id,
                 new CreateUpdateImageOcrDto
@@ -121,9 +127,17 @@ namespace FaxVerification.Web.Pages.OCR
             [HiddenInput]
             public string FilePath { get; set; }
 
-            [HiddenInput]
-            public ConfigurationSettings FormConfiguration { get; set; }
+            public ConfigurationSettViewModel FormConfiguration { get; set; }
         }
+
+        public class ConfigurationSettViewModel
+        {
+            public string TemplateName { get; set; }
+            public List<FieldsModel> Fields { get; set; }
+            public List<FieldsValueModel> FieldValue { get; set; }
+        }
+
+
 
         public class TextExtractionFields
         {
