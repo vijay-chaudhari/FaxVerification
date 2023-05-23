@@ -59,7 +59,7 @@
                         "fieldName": "Attribute_"+i,
                         "Text": FieldName,
                         "coOrdinates": cords ,
-                        "PageNumber": page
+                        "PageNumber": parseInt(page)
                     }
                     AdditionalFields.push(obj);
 
@@ -89,6 +89,7 @@
                     success: function (result) {
                         // Handle the success response
                         console.log(result);
+                        window.location = "";
                     },
                     error: function (xhr, status, error) {
                         // Handle the error

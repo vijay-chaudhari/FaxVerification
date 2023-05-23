@@ -191,12 +191,17 @@ $(function () {
                                         return ("BookDeletionConfirmationMessage", data.record.name);
                                     },
                                     action: function (data) {
+
+                                       
+
                                         //acme.bookStore.books.book
                                         //    .delete(data.record.id)
                                         //    .then(function () {
                                         //        abp.notify.info(l('SuccessfullyDeleted'));
                                         //        dataTable.ajax.reload();
                                         //    });
+
+
                                     }
                                 },
 
@@ -204,6 +209,12 @@ $(function () {
                                     text: "Assign",
                                     action: function (data) {
                                         //editModal.open({ id: data.record.id });
+                                        faxVerification.configuration.config.assignDocument({ "userID": data.record.id, "documentID": data.record.id })
+                                            .then(function () {
+                                                abp.notify.info(l('SuccessfullyDeleted'));
+                                            });
+
+
                                     }
                                 },
                             ]

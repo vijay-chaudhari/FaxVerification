@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 
 namespace FaxVerification.Records
 {
@@ -35,14 +37,17 @@ namespace FaxVerification.Records
             DeletePolicyName = FaxVerificationPermissions.Documents.Create;
         }
 
-        public override Task<PagedResultDto<OcrDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<OcrDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            return base.GetListAsync(input);
+            //Task<PagedResultDto<OcrDto>> result = Repository.GetListAsync(input);
+            Guid? UserID = CurrentUser.Id;
+            var result = ObjectMapper.Map<List<ImageOcr>, List<OcrDto>>(await Repository.GetListAsync(true)).Where(a=>a.AssignedTo == UserID || a.AssignedTo == null).ToList();
+
+            return new PagedResultDto<OcrDto> { TotalCount = result.Count, Items = result }; ; //base.GetListAsync(input);
         }
 
         public async Task Highlight(Request request)
         {
-
             HighliightPdf(request);
         }
 

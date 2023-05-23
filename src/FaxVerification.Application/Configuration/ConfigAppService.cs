@@ -1,9 +1,12 @@
 ﻿using FaxVerification.Permissions;
+using FaxVerification.Records;
 using Microsoft.AspNetCore.Authorization;
+using Org.BouncyCastle.Asn1.Mozilla;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -20,8 +23,42 @@ namespace FaxVerification.Configuration
         CreateUpdateConfigurationSettingsDto>,//Used for paging/sorting
         IConfigAppService
     {
-        public ConfigAppService(IRepository<ConfigurationSettings, Guid> repository) : base(repository)
+
+        private readonly IOcrAppService _ocrAppService;
+        public ConfigAppService(IRepository<ConfigurationSettings, Guid> repository , IOcrAppService ocrAppService) : base(repository)
         {
+            _ocrAppService = ocrAppService;
         }
+
+        public async Task AssignDocument (AssignDocumentRequest request)
+        {
+            Guid? UserID = CurrentUser.Id;
+            Guid DocumentID = new Guid(request.DocumentID);
+
+            var ImageOcrDto = await _ocrAppService.GetAsync(DocumentID);
+
+            ImageOcrDto.AssignedTo = UserID;
+
+            await _ocrAppService.UpdateAsync(
+               ImageOcrDto.Id,
+               new CreateUpdateImageOcrDto
+               {
+                   OutputPath = ImageOcrDto.OutputPath,
+                   OCRText = ImageOcrDto.OCRText,
+                   Confidence = ImageOcrDto.Confidence,
+                   Output = ImageOcrDto.Output,
+                   InputPath = ImageOcrDto.InputPath,
+                   AssignedTo = UserID,
+                   
+               });
+
+
+        }
+    }
+
+    public class AssignDocumentRequest
+    {
+        public string DocumentID { get; set; }
+        public string UserID { get; set; }
     }
 }

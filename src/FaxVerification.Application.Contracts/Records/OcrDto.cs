@@ -14,6 +14,8 @@ namespace FaxVerification.Records
         public string OCRText { get; set; }
         public string Confidence { get; set; }
         public string Output { get; set; }
+
+        public Guid? AssignedTo { get; set; }
         //public string FormConfiguration { get; set; }
     }
 }

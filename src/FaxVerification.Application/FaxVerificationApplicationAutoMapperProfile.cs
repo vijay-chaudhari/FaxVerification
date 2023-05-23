@@ -17,7 +17,7 @@ public class FaxVerificationApplicationAutoMapperProfile : Profile
         CreateMap<ImageOcr, OcrDto>();
         CreateMap<CreateUpdateImageOcrDto, ImageOcr>()
             .ForMember(x=>x.Id, opt=>opt.Ignore())
-            .ForMember(x=>x.ConcurrencyStamp, opt=>opt.Ignore())
+            .ForMember(x=>x.ConcurrencyStamp, opt=>opt.Ignore())//.ForMember(x=>x.)
             .IgnoreFullAuditedObjectProperties().IgnoreAllPropertiesWithAnInaccessibleSetter();
 
 
