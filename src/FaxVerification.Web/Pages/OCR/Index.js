@@ -198,7 +198,14 @@ $(function () {
                                         //        dataTable.ajax.reload();
                                         //    });
                                     }
-                                }
+                                },
+
+                                {
+                                    text: "Assign",
+                                    action: function (data) {
+                                        //editModal.open({ id: data.record.id });
+                                    }
+                                },
                             ]
                     }
                 },

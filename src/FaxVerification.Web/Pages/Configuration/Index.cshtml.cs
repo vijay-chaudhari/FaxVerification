@@ -21,15 +21,18 @@ namespace FaxVerification.Web.Pages.Configuration
     {
         [BindProperty]
         //public EditDetailsViewModel Data { get; set; }
-        public ConfigurationSettViewModel Data { get; set; } 
-        
+        public ConfigurationSettViewModel Data { get; set; }
+
+        private readonly IConfigAppService _configAppService;
+
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment Environment;
 
-        public IndexModel(IConfiguration configuration, IWebHostEnvironment _environment)
+        public IndexModel(IConfiguration configuration, IWebHostEnvironment _environment,IConfigAppService configAppService)
         {
             _configuration = configuration;
             Environment = _environment;
+            _configAppService = configAppService;
             //Data = new EditDetailsViewModel();
             //Data.PersonDetails = new DynamicViewModel();
             //Data.FormConfiguration = new ConfigurationSettViewModel();
@@ -38,12 +41,16 @@ namespace FaxVerification.Web.Pages.Configuration
 
 
         }
-        public void OnGet()
+        public async void OnGet()
         {
             string Formconfigutration = _configuration.GetValue<string>("ConfigurationAtrributes");
 
             //var dataFile = Server.MapPath("~/App_Data/data.txt");
             //string[] filePaths = Directory.GetFiles(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
+            //CreateUpdateConfigurationSettingsDto s = new CreateUpdateConfigurationSettingsDto();
+            //Guid id = new Guid("BE0F2722-6BB5-B833-D5A1-3A0B56FBC344");
+            //var S =  _configAppService.GetAsync(id);
+
 
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
             //ConfigurationSettViewModel person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);

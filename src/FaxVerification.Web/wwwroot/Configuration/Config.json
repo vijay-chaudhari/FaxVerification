@@ -1,1 +1,21 @@
-{"TemplateName":null,"Fields":[{"FieldName":"Paitent Name","RegExpression":null,"CoOrdinates":null},{"FieldName":"Age","RegExpression":null,"CoOrdinates":null},{"FieldName":"Birth Date","RegExpression":null,"CoOrdinates":null}],"FieldValue":null}
+{
+  "TemplateName": null,
+  "Fields": [
+    {
+      "FieldName": "Customer Name",
+      "RegExpression": null,
+      "CoOrdinates": null
+    },
+    {
+      "FieldName": "Payement Ref",
+      "RegExpression": null,
+      "CoOrdinates": null
+    },
+    {
+      "FieldName": "Payment DueDate",
+      "RegExpression": null,
+      "CoOrdinates": null
+    }
+  ],
+  "FieldValue": null
+}

@@ -76,16 +76,18 @@
                     @{
                         int i = 0;
 
-                        @foreach (var item in Model.Configu.Fields)
+                        @foreach (var item in Model.Data.FormConfiguration.Fields)
                     {
                             i ++;
                             string ValueID = "Attribute_" + i; 
                             string CordinateValueID = "AttributeCord_" + i; 
                             <label id="lbl_1" asp-for="@item.FieldName" class="control-label">@item.FieldName.ToString()</label>
-                            <input asp-for="@ValueID" class="form-control" value="@item.RegExpression" />
-                            <input asp-for="@CordinateValueID" class="form-control Hide_attr" value="@item.RegExpression" />
+                            <input asp-for="@item.RegExpression" id="@ValueID" name="@ValueID" class="form-control" value="@item.RegExpression" />
+                            <input asp-for="@item.CoOrdinates" id="@CordinateValueID" name="@CordinateValueID" class="form-control Hide_attr" value="@item.CoOrdinates" />
                     }
                     }
+
+                    <input id="FieldsCount" type="hidden" value="@Model.Data.FormConfiguration.Fields.Count" />
 @*
                 <label id="lbl_1" asp-for="Data.PersonDetails.Attribute_1" class="control-label"></label>
                 <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
@@ -119,20 +121,25 @@
                 <input asp-for="Data.OutputPath" class="form-control" />
                 <input asp-for="Data.Id" class="form-control" />
 
-                <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
+       @*         <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_2" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_3" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_4" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_5" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_6" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_7" class="form-control" />
-                <input asp-for="Data.PersonDetails.AttributeCords_8" class="form-control" />
+                <input asp-for="Data.PersonDetails.AttributeCords_8" class="form-control" />*@
                     <input asp-for="Data.FormConfiguration" class="form-control" />
 
 
             </div>
         </div>
     </abp-modal-body>
-    <abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    @*<abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>*@
+        <abp-modal-footer style="padding-bottom:1px; padding-top:5px">
+            <abp-button button-type="Default" text="Cancel"></abp-button>
+            <abp-button button-type="Primary" id="saveConfig" text="Save"></abp-button>
+        </abp-modal-footer>
+
 </abp-modal>
 </form>

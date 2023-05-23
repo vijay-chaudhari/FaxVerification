@@ -24,13 +24,17 @@
                 @foreach (var item in Model.Data.Fields)
                 {
                     i = i + 1;
+                    string Variable = "FieldName_" + i;
+                    string VariableRegx = "Regex_" + i;
                     <div class="d-md-flex  col-md-12">
                         <label id="lbl_1" asp-for="@item.FieldName" class="control-label col-md-2">Attribute-@i</label>
-                        <input asp-for="@item.FieldName" class="form-control col-md-2" style="width:25%" />
-                        <input asp-for="@item.RegExpression" class="form-control col-md-2" style="width:25%" />
+                        <input asp-for="@item.FieldName" id="@Variable" class="form-control col-md-2" style="width:25%" />
+                        <input asp-for="@item.RegExpression" id="@VariableRegx" class="form-control col-md-2" style="width:25%" />
                     </div>
                 }
             }
+
+            <input type="hidden" value="@Model.Data.Fields.Count" id="FieldsCount" />
 
             @*<input asp-for="Data.FilePath" class="form-control" />
             <input asp-for="Data.Output" class="form-control" />
@@ -59,6 +63,12 @@
 
 @section scripts {
     <abp-script src="/Pages/Configuration/Index.js" />
+
+     
 }
 
+@{
+    var D = Model.Data;
 
+
+}

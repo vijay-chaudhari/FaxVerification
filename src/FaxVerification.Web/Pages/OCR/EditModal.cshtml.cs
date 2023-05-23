@@ -1,8 +1,10 @@
 using FaxVerification.Configuration;
 using FaxVerification.Records;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -26,8 +28,8 @@ namespace FaxVerification.Web.Pages.OCR
     {
         [BindProperty]
         public EditDetailsViewModel Data { get; set; }
-        [BindProperty]
-        public ConfigurationSettViewModel Configu { get; set; }
+        //[BindProperty]
+        //public ConfigurationSettViewModel Configu { get; set; }
         //IConfiguration Configuration;
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment Environment;
@@ -39,7 +41,8 @@ namespace FaxVerification.Web.Pages.OCR
             Environment = _environment;
             Data = new EditDetailsViewModel();
             Data.FormConfiguration = new ConfigurationSettViewModel();
-            Configu = new ConfigurationSettViewModel();
+
+            //Configu = new ConfigurationSettViewModel();
         }
         public async Task OnGetAsync(Guid id)
         {
@@ -51,8 +54,16 @@ namespace FaxVerification.Web.Pages.OCR
             Data.OCRText = ImageOcrDto.OCRText;
             Data.Confidence = ImageOcrDto.Confidence;
             Data.Output = ImageOcrDto.Output;
-            //Data.PersonDetails = JsonSerializer.Deserialize<TextExtractionFields>(ImageOcrDto.Output);
-            Data.PersonDetails = JsonSerializer.Deserialize<DynamicViewModel>(ImageOcrDto.Output);
+            try
+            {
+
+                Data.PersonDetails = JsonSerializer.Deserialize<TextExtractionFields>(ImageOcrDto.Output);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            //Data.PersonDetails = JsonSerializer.Deserialize<EditDetailsViewModel>(ImageOcrDto.Output);
             //string Formconfigutration = _configuration.GetValue<string>("ConfigurationAtrributes");
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
@@ -78,14 +89,23 @@ namespace FaxVerification.Web.Pages.OCR
             //if (person.Attribute_8 != null)
             //    Formconfigutration += "~" + person.Attribute_8;
 
+            for(var i = 0; i < person.Fields.Count; i++)
+            {
+                var field = Data.PersonDetails.AdditionalFields[i];
+                //person.Fields[i].FieldName = field.FieldName;
+                person.Fields[i].RegExpression = field.Text;
+                person.Fields[i].CoOrdinates = field.Rectangle + "," + field.PageNumber;
+
+            }
+
 
             Data.FormConfiguration = person;
-            Configu = person;
+            //Configu = person;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var a = Configu;
+            //var a = Configu;
             await _ocrAppService.UpdateAsync(
                 Data.Id,
                 new CreateUpdateImageOcrDto
@@ -110,9 +130,9 @@ namespace FaxVerification.Web.Pages.OCR
         {
             [HiddenInput]
             public Guid Id { get; set; }
-           // public TextExtractionFields PersonDetails { get; set; }
+            public TextExtractionFields PersonDetails { get; set; }
 
-            public DynamicViewModel PersonDetails { get; set; }
+            //public DynamicViewModel PersonDetails { get; set; }
 
             [HiddenInput]
             public string InputPath { get; set; }
@@ -137,17 +157,27 @@ namespace FaxVerification.Web.Pages.OCR
            // public List<FieldsValueModel> FieldValue { get; set; }
         }
 
+        public class ConfigFieldViewModel
+        {
+            public string TemplateName { get; set; }
+            //public List<FieldConfig> Fields { get; set; }
+             public List<ExtraFields> FieldValue { get; set; }
+        }
 
 
         public class TextExtractionFields
         {
             public Patient Patient { get; set; }
             public Invoice Invoice { get; set; }
+            public List<ExtraFields> AdditionalFields { get; set; }
             public TextExtractionFields()
             {
                 Invoice = new();
                 Patient = new();
+                AdditionalFields = new List<ExtraFields>();
             }
+
+
 
 
         }
@@ -447,5 +477,18 @@ namespace FaxVerification.Web.Pages.OCR
             public string Attribute_8 { get; set; }
 
         }
+
+        public class ExtraFields
+        {
+            [HiddenInput]
+            public string Text { get; set; }
+            [HiddenInput]
+            public string FieldName { get; set; }
+            [HiddenInput]
+            public int? PageNumber { get; set; }
+            [HiddenInput]
+            public string Rectangle { get; set; }
+        }
+
     }
 }

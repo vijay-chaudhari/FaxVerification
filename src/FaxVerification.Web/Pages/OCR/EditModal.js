@@ -24,6 +24,81 @@
 
         //});
 
+
+        $(document).ready(function () {
+            $('#saveConfig').click(function () {
+
+                debugger;
+                //alert(JSON.stringify('@Model.Data'));
+
+                var DocumnetNumber = document.getElementById("FieldsCount").value;
+
+                var output = JSON.parse(document.querySelector('#Data_Output').value);
+                var ID = document.querySelector('#Data_Id').value;
+                var OutputPath = document.querySelector('#Data_OutputPath').value;
+                var OCRText = document.querySelector('#Data_OCRText').value;
+                var Confidence = document.querySelector('#Data_Confidence').value;
+                var InputPath = document.querySelector('#Data_InputPath').value;
+
+                var AdditionalFields = [];
+
+                for (var i = 1; i <= DocumnetNumber; i++) {
+
+                    var FieldName = document.getElementById("Attribute_" + i).value;
+                    //var Cordinates = document.getElementById("AttributeCord_" + i).value;
+
+                    var cordinates = document.querySelector('#AttributeCord_' + i).value.split(',');
+                    var page = cordinates[4];
+                    cordinates.pop();
+
+
+                    let cords = cordinates.join(',');
+
+                    var obj = {
+                        //"TemplateId":"",
+                        "fieldName": "Attribute_"+i,
+                        "Text": FieldName,
+                        "coOrdinates": cords ,
+                        "PageNumber": page
+                    }
+                    AdditionalFields.push(obj);
+
+                }
+
+                output.AdditionalFields = AdditionalFields;
+
+                console.log(output);
+
+                let ObjDTO = {
+
+                    "OutputPath" : OutputPath,
+                    "OCRText" : OCRText,
+                    "Confidence": Confidence,
+                    "Output": JSON.stringify(output),
+                    "InputPath" : InputPath
+
+
+                };
+
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/app/ocr/' + ID,
+                    data: JSON.stringify(ObjDTO),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        // Handle the success response
+                        console.log(result);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error
+                        console.log(error);
+                    }
+                });
+            });
+        });
+
+
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
 
         WebViewer({
@@ -171,12 +246,13 @@
 
                 if (activeElement.id.includes("Attribute_")) {
                     //alert(activeElement.id);
+                    debugger;
                     var elecmetID = activeElement.id.split('_');
-                    var elemid = elecmetID[3];
+                    var elemid = elecmetID[1];
 
                     var chords_pageNo = cords + "," + pageIndex;
 
-                    document.querySelector('#Data_PersonDetails_AttributeCords_' + elemid).value = chords_pageNo;
+                    document.querySelector('#AttributeCord_' + elemid).value = chords_pageNo;
                     //document.querySelector('#Data_PersonDetails_Invoice_Total_PageNumber').value = pageIndex;
                     hightLightAnnnotation(cords.split(','), pageIndex);
 
@@ -281,12 +357,12 @@
                     }
 
                     if (input.id.includes("Attribute_")) {
-                        //debugger;
+                        debugger;
                         //alert(activeElement.id);
                         var elecmetID = activeElement.id.split('_');
-                        var elemid = elecmetID[3];
+                        var elemid = elecmetID[1];
 
-                        var cordinates = document.querySelector('#Data_PersonDetails_AttributeCords_' + elemid).value.split(',');
+                        var cordinates = document.querySelector('#AttributeCord_' + elemid).value.split(',');
                         var page = cordinates[4];
                         cordinates.pop();
 
@@ -389,11 +465,15 @@
                 }
             }
         });
+
+
+
     };
     return {
         initModal: initModal
     };
 };
+
 
 
 //document.onload = function () {
