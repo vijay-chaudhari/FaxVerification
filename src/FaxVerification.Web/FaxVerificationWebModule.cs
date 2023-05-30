@@ -17,6 +17,7 @@ using System.IO;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
@@ -80,6 +81,10 @@ public class FaxVerificationWebModule : AbpModule
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
+        context.Services.Configure<AbpAntiForgeryOptions>(option =>
+        {
+            option.AutoValidate = false;
+        });
         context.Services.AddTransient<OcrAppService>();
         ConfigureAuthentication(context);
         ConfigureUrls(configuration);

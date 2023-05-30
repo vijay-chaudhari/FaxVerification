@@ -64,7 +64,6 @@ public class FaxVerificationDbContext :
     {
 
     }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -99,7 +98,7 @@ public class FaxVerificationDbContext :
         {
             b.ToTable(FaxVerificationConsts.DbTablePrefix + "ConfigurationSettings", FaxVerificationConsts.DbSchema).HasKey(x => x.Id);
             b.ConfigureByConvention();
-            b.HasMany(x => x.Fields).WithOne(x => x.ConfigurationSetting).HasForeignKey(x => x.TemplateId).IsRequired(false);
+            b.HasMany(x => x.Fields).WithOne(x => x.ConfigurationSetting).HasForeignKey(x => x.TemplateId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
