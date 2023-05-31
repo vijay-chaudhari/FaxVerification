@@ -97,6 +97,10 @@
                     }
                 });
             });
+
+            $('#cancelModal').click(function () {
+                location.reload();
+            });
         });
 
 

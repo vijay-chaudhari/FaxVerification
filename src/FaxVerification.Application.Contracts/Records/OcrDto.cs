@@ -16,6 +16,8 @@ namespace FaxVerification.Records
         public string Output { get; set; }
 
         public Guid? AssignedTo { get; set; }
+
+        public Guid? CurrentUserID { get; set; }         
         //public string FormConfiguration { get; set; }
     }
 }

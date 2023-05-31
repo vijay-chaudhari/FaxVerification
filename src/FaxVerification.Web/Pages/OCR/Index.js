@@ -166,6 +166,18 @@ $(function () {
         modalClass: 'ProductInfo'
     });
 
+    //function ISAssign(data) {
+    //    debugger;
+    //    if (data.record.assignDocument) {
+
+    //    }
+
+    //}
+    $('#cancelModal').click(function () {
+
+        editModal.close();
+    });
+
     var dataTable = $('#BooksTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
@@ -179,10 +191,49 @@ $(function () {
                     rowAction: {
                         items:
                             [
+
+                                {
+                                    text: "Assign",
+                                    action: function (data) {
+                                        //editModal.open({ id: data.record.id });
+                                        faxVerification.configuration.config.assignDocument({ "userID": data.record.id, "documentID": data.record.id })
+                                            .then(function () {
+                                                abp.notify.info(l('SuccessfullyAssgiend'));
+                                                $('#BooksTable').DataTable().ajax.reload();
+                                            });
+
+
+                                    },
+                                    visible: function (data) {
+                                        console.log(data);
+                                        if (data.assignedTo != null && data.assignedTo != undefined && data.assignedTo != "") {
+                                            return false;
+                                        }
+                                        else {
+                                            return true;
+                                        }
+                                    }
+                                },
                                 {
                                     text: "Edit",
                                     action: function (data) {
-                                        editModal.open({ id: data.record.id });
+
+                                        debugger;
+                                        if (data.record.assignedTo != null && data.record.assignedTo != undefined && data.record.assignedTo != "") {
+                                            if (data.record.assignedTo == data.record.currentUserID) {
+                                                editModal.open({ id: data.record.id });
+                                            }
+                                            else {
+                                                abp.notify.warn('Self assign document first');
+                                            }
+
+                                        }
+                                        else {
+                                            abp.notify.warn('Self assign document first');
+                                        }
+
+
+
                                     }
                                 },
                                 {
@@ -192,7 +243,7 @@ $(function () {
                                     },
                                     action: function (data) {
 
-                                       
+                                        $('#BooksTable').DataTable().ajax.reload();
 
                                         //acme.bookStore.books.book
                                         //    .delete(data.record.id)
@@ -204,17 +255,32 @@ $(function () {
 
                                     }
                                 },
-
                                 {
-                                    text: "Assign",
+                                    text: "Unassign",
                                     action: function (data) {
                                         //editModal.open({ id: data.record.id });
-                                        faxVerification.configuration.config.assignDocument({ "userID": data.record.id, "documentID": data.record.id })
+                                        faxVerification.configuration.config.UnAssignDocument({ "userID": data.record.id, "documentID": data.record.id })
                                             .then(function () {
-                                                abp.notify.info(l('SuccessfullyDeleted'));
+                                                abp.notify.info(l('Successfully Unassgiend'));
+                                                $('#BooksTable').DataTable().ajax.reload();
                                             });
 
 
+                                    },
+                                    visible: function (data) {
+                                        console.log(data);
+                                        if (data.assignedTo != null && data.assignedTo != undefined && data.assignedTo != "") {
+                                            if (data.assignedTo == data.currentUserID) {
+                                                return true;
+                                            }
+                                            else {
+                                                return false;
+                                            }
+                                            
+                                        }
+                                        else {
+                                            return false;
+                                        }
                                     }
                                 },
                             ]

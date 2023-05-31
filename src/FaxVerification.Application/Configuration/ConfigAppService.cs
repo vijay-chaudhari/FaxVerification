@@ -54,6 +54,31 @@ namespace FaxVerification.Configuration
 
 
         }
+
+        public async Task UnAssignDocument(AssignDocumentRequest request)
+        {
+            Guid? UserID = CurrentUser.Id;
+            Guid DocumentID = new Guid(request.DocumentID);
+
+            var ImageOcrDto = await _ocrAppService.GetAsync(DocumentID);
+
+            ImageOcrDto.AssignedTo = UserID;
+
+            await _ocrAppService.UpdateAsync(
+               ImageOcrDto.Id,
+               new CreateUpdateImageOcrDto
+               {
+                   OutputPath = ImageOcrDto.OutputPath,
+                   OCRText = ImageOcrDto.OCRText,
+                   Confidence = ImageOcrDto.Confidence,
+                   Output = ImageOcrDto.Output,
+                   InputPath = ImageOcrDto.InputPath,
+                   AssignedTo = UserID,
+
+               });
+
+
+        }
     }
 
     public class AssignDocumentRequest

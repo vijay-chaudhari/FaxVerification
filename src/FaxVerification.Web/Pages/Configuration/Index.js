@@ -15,13 +15,17 @@
            
             var FieldName = document.getElementById("FieldName_" + i).value;
             var Regex = document.getElementById("Regex_" + i).value;
-            var obj = {
-                //"TemplateId":"",
-                "fieldName": FieldName,
-                "regExpression": Regex,
-                "coOrdinates": ""
+
+            if (FieldName != "" && Regex != "") {
+                var obj = {
+                    //"TemplateId":"",
+                    "fieldName": FieldName,
+                    "regExpression": Regex,
+                    "coOrdinates": ""
+                }
+                data.fields.push(obj);
             }
-            data.fields.push(obj);
+        
 
         }
 
@@ -35,12 +39,36 @@
             success: function (result) {
                 // Handle the success response
                 console.log(result);
+                abp.notify.success(l('Configuration Saved'));
             },
             error: function (xhr, status, error) {
                 // Handle the error
                 console.log(error);
+                abp.notify.warn(l('Something went worng'));
             }
         });
+    });
+
+
+    $("#addconfig").on("click", function () {
+
+        var DocumnetNumber = parseInt(document.getElementById("FieldsCount").value);
+
+        var totaldiv = '<div class="d-md-flex  col-md-12" style="margin-bottom:1%">'
+
+        var fieldname = 'FieldName_' + (DocumnetNumber + 1)
+        var Regex = 'Regex_' + (DocumnetNumber + 1)
+
+        totaldiv += ' <label id="lbl_1" asp-for="item_FieldName" class="control-label col-md-2">Attribute-' +( DocumnetNumber +1) +'</label>'
+
+        totaldiv += ' <input asp-for="item_FieldName" id="' + fieldname +'" class="form-control col-md-2" style="width:25%" />'
+         
+        totaldiv += '<input asp-for="item_RegExpression" id="' + Regex +'" class="form-control col-md-2" style="width:25%;margin-left:2%" /> </div>'
+        debugger;
+     
+        $("#dynamicHtmlList").append(totaldiv);
+
+        document.getElementById("FieldsCount").value = (DocumnetNumber + 1);
     });
 });
 

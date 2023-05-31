@@ -41,8 +41,9 @@ namespace FaxVerification.Records
         {
             //Task<PagedResultDto<OcrDto>> result = Repository.GetListAsync(input);
             Guid? UserID = CurrentUser.Id;
-            var result = ObjectMapper.Map<List<ImageOcr>, List<OcrDto>>(await Repository.GetListAsync(true)).Where(a=>a.AssignedTo == UserID || a.AssignedTo == null).ToList();
-
+            List<ImageOcr> resultlist = await Repository.GetListAsync(true);
+            var result = ObjectMapper.Map<List<ImageOcr>, List<OcrDto>>(resultlist).ToList();//.Where(a=>a.AssignedTo == UserID || a.AssignedTo == null).ToList();
+            result.ForEach(a => a.CurrentUserID = UserID);
             return new PagedResultDto<OcrDto> { TotalCount = result.Count, Items = result }; ; //base.GetListAsync(input);
         }
 

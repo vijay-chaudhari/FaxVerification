@@ -14,7 +14,7 @@ public class FaxVerificationApplicationAutoMapperProfile : Profile
         /* You can configure your AutoMapper mapping configuration here.
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
-        CreateMap<ImageOcr, OcrDto>();
+        CreateMap<ImageOcr, OcrDto>().ForMember(a=>a.CurrentUserID, opt => opt.Ignore());
         CreateMap<CreateUpdateImageOcrDto, ImageOcr>()
             .ForMember(x=>x.Id, opt=>opt.Ignore())
             .ForMember(x=>x.ConcurrencyStamp, opt=>opt.Ignore())//.ForMember(x=>x.)
