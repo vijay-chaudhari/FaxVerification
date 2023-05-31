@@ -10,7 +10,7 @@ namespace FaxVerification.Configuration
     public class ConfigurationSettings : FullAuditedAggregateRoot<Guid>
     {
         public string TemplateName { get; set; }
-        public List<FieldConfig> Fields { get; set; }
+        public ICollection<FieldConfig> Fields { get; set; }
 
         public ConfigurationSettings()
         {

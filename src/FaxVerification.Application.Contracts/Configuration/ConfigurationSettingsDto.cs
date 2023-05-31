@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Volo.Abp.Application.Dtos;
 
 namespace FaxVerification.Configuration
@@ -15,9 +14,14 @@ namespace FaxVerification.Configuration
     [Serializable]
     public class FieldConfigDto
     {
-        public Guid TemplateId { get; set; }
+        public Guid Id { get; set; }
         public string FieldName { get; set; }
         public string RegExpression { get; set; }
         public string CoOrdinates { get; set; }
+
+        public FieldConfigDto()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

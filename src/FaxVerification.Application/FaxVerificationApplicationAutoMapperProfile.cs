@@ -4,6 +4,7 @@ using FaxVerification.Records;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Guids;
 
 namespace FaxVerification;
 
@@ -28,7 +29,12 @@ public class FaxVerificationApplicationAutoMapperProfile : Profile
             .ForMember(x => x.ConcurrencyStamp, opt => opt.Ignore())
             .IgnoreFullAuditedObjectProperties().IgnoreAllPropertiesWithAnInaccessibleSetter();
 
-        CreateMap<FieldConfig, FieldConfigDto>().ReverseMap();
+        CreateMap<FieldConfig, FieldConfigDto>()
+            .DisableCtorValidation().ReverseMap();
 
+        //CreateMap<FieldConfigDto, FieldConfig>().DisableCtorValidation()
+        //    .ForMember(x => x.Id, opt => new SimpleGuidGenerator().Create())
+        //    .ForMember(x=>x.TemplateId, opt=>opt.Ignore())
+        //    .ForMember(x=>x.ConfigurationSetting, opt=>opt.Ignore());
     }
 }

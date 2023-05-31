@@ -1,12 +1,8 @@
 ﻿using FaxVerification.Permissions;
 using FaxVerification.Records;
 using Microsoft.AspNetCore.Authorization;
-using Org.BouncyCastle.Asn1.Mozilla;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -23,11 +19,16 @@ namespace FaxVerification.Configuration
         CreateUpdateConfigurationSettingsDto>,//Used for paging/sorting
         IConfigAppService
     {
-
         private readonly IOcrAppService _ocrAppService;
         public ConfigAppService(IRepository<ConfigurationSettings, Guid> repository , IOcrAppService ocrAppService) : base(repository)
         {
             _ocrAppService = ocrAppService;
+        }
+
+        public override async Task<PagedResultDto<ConfigurationSettingsDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        {
+            var a = ObjectMapper.Map<List<ConfigurationSettings>, List<ConfigurationSettingsDto>>(await Repository.GetListAsync(true));
+            return new PagedResultDto<ConfigurationSettingsDto> { TotalCount = a.Count, Items = a };
         }
 
         public async Task AssignDocument (AssignDocumentRequest request)

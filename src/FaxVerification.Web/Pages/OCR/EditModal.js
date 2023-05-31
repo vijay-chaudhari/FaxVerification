@@ -107,7 +107,7 @@
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
 
         WebViewer({
-            path: "./libs/pdfjs-express/lib",
+            path: "./libs/pdfjs-express",
             disabledElements: ['ribbons', 'menuButton', 'toggleNotesButton'],
             preloadWorker: WebViewer.WorkerTypes.PDF,
             initialDoc: fileName,
@@ -200,7 +200,6 @@
                 activeElement.value = text;
                 const cords = `${rect.x1},${rect.y1},${rect.x2},${rect.y2}`;
                 conversionRequired = false;
-                debugger;
 
                 if (activeElement.id === 'Data_PersonDetails_Patient_Name_Text') {
                     document.querySelector('#Data_PersonDetails_Patient_Name_Rectangle').value = cords;
@@ -251,7 +250,7 @@
 
                 if (activeElement.id.includes("Attribute_")) {
                     //alert(activeElement.id);
-                    debugger;
+                    
                     var elecmetID = activeElement.id.split('_');
                     var elemid = elecmetID[1];
 
