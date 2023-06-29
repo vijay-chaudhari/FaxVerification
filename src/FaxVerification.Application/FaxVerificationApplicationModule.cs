@@ -1,4 +1,7 @@
-﻿using Volo.Abp.Account;
+﻿using FaxVerification.Records;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -28,5 +31,8 @@ public class FaxVerificationApplicationModule : AbpModule
         {
             options.AddMaps<FaxVerificationApplicationModule>(validate: true);
         });
+
+        // Register your custom application service
+        context.Services.AddTransient<OCRWorkBenchIntegration>();
     }
 }

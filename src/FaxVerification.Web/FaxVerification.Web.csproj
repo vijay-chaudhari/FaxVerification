@@ -16,9 +16,13 @@
 
   <ItemGroup>
     <Compile Remove="Logs\**" />
+    <Compile Remove="Pages\Account\**" />
     <Content Remove="Logs\**" />
+    <Content Remove="Pages\Account\**" />
     <EmbeddedResource Remove="Logs\**" />
+    <EmbeddedResource Remove="Pages\Account\**" />
     <None Remove="Logs\**" />
+    <None Remove="Pages\Account\**" />
   </ItemGroup>
 
   <ItemGroup>

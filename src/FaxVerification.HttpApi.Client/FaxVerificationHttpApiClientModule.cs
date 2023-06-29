@@ -7,6 +7,7 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.VirtualFileSystem;
+using FaxVerification.Records;
 
 namespace FaxVerification;
 
@@ -34,5 +35,6 @@ public class FaxVerificationHttpApiClientModule : AbpModule
         {
             options.FileSets.AddEmbedded<FaxVerificationHttpApiClientModule>();
         });
+        context.Services.AddTransient<IOCRWorkBenchIntegration>();
     }
 }

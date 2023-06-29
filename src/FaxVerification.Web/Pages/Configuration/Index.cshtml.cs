@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
 using Volo.Abp.Data;
 using Volo.Abp.Users;
@@ -49,14 +50,17 @@ namespace FaxVerification.Web.Pages.Configuration
             //string[] filePaths = Directory.GetFiles(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
             //CreateUpdateConfigurationSettingsDto s = new CreateUpdateConfigurationSettingsDto();
             //Guid id = new Guid("BE0F2722-6BB5-B833-D5A1-3A0B56FBC344");
-            //var S =  _configAppService.GetAsync(id);
+            //PagedAndSortedResultRequestDto input = new PagedAndSortedResultRequestDto();
+            //var S = await _configAppService.GetListAsync(input);
 
+           
 
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
             //ConfigurationSettViewModel person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
             Data = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
             //Data.FormConfiguration = person;
 
+            Data.TemplateName = Environment.WebRootPath;
             //string[] ConfigArrray = Formconfigutration.Split('~');
             //if (ConfigArrray.Length >= 8)
             //    Data.PersonDetails.Attribute_8 = Convert.ToString(ConfigArrray[7]);

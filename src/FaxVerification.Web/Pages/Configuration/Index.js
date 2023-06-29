@@ -5,10 +5,11 @@
         //alert(JSON.stringify('@Model.Data'));
 
         var DocumnetNumber = document.getElementById("FieldsCount").value;
+        var TemplateName = document.getElementById("TemplateName").value;
 
         data = {
-            "templateName": "Invoice",
-            "fields": []
+            "TemplateName": "Invoice",
+            "Fields": []
         }
 
         for (var i = 1; i <= DocumnetNumber; i++) {
@@ -16,20 +17,59 @@
             var FieldName = document.getElementById("FieldName_" + i).value;
             var Regex = document.getElementById("Regex_" + i).value;
 
-            if (FieldName != "" && Regex != "") {
+            if (FieldName != "") {
                 var obj = {
                     //"TemplateId":"",
-                    "fieldName": FieldName,
-                    "regExpression": Regex,
-                    "coOrdinates": ""
+                    "FieldName": FieldName,
+                    "RegExpression": Regex,
+                    "CoOrdinates": ""
                 }
-                data.fields.push(obj);
+                data.Fields.push(obj);
             }
         
 
         }
 
-       
+
+        //const fs = require('fs');
+
+        ////let data = "Learning how to write in a file."
+
+        //var file = window.location.href + "/Configuration/Config.json";
+
+
+        //// Write data in 'Output.txt' .
+        //fs.writeFile(file, data, (err) => {
+
+        //    // In case of a error throw err.
+        //    if (err) throw err;
+        //})
+
+        var req = { "userID": JSON.stringify(data), "documentID": TemplateName }
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/app/config/save-config-file',
+            data: JSON.stringify(req),
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                // Handle the success response
+                console.log(result);
+                abp.notify.success('Configuration Saved');
+            },
+            error: function (xhr, status, error) {
+                // Handle the error
+                console.log(error);
+                abp.notify.warn('Something went worng');
+            }
+        });
+
+
+
+
+
+        var USerID = "181003CD-F98A-B44A-17B5-3A0BACE2050C";
+
 
         $.ajax({
             type: 'POST',
@@ -39,14 +79,36 @@
             success: function (result) {
                 // Handle the success response
                 console.log(result);
-                abp.notify.success(l('Configuration Saved'));
+                abp.notify.success('Configuration Saved');
             },
             error: function (xhr, status, error) {
                 // Handle the error
                 console.log(error);
-                abp.notify.warn(l('Something went worng'));
+                abp.notify.warn('Something went worng');
             }
         });
+
+        debugger;
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/app/config/' + USerID,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                // Handle the success response
+                console.log(result);
+                //abp.notify.success('Configuration Saved');
+            },
+            error: function (xhr, status, error) {
+                // Handle the error
+                console.log(error);
+                //abp.notify.warn('Something went worng');
+            }
+        });
+
+
+
     });
 
 

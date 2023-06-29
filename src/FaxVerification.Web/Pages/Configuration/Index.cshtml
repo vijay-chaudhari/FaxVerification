@@ -39,6 +39,9 @@
             </div>
 
             <input type="hidden" value="@Model.Data.Fields.Count" id="FieldsCount" />
+            <input type="hidden" value="@Model.Data.TemplateName" id="TemplateName" />
+            <input type="hidden" asp-for="Data.TemplateName" class="form-control" />
+
 
             @*<input asp-for="Data.FilePath" class="form-control" />
             <input asp-for="Data.Output" class="form-control" />
@@ -71,7 +74,7 @@
 @section scripts {
     <abp-script src="/Pages/Configuration/Index.js" />
 
-     
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 }
 
 @{

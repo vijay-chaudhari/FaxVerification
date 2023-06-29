@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
@@ -11,6 +12,7 @@ namespace FaxVerification.Records
         PagedAndSortedResultRequestDto, //Used for paging/sorting
         CreateUpdateImageOcrDto> //Used to create/update a book
     {
-       // Task<List<OcrDto>> GetListAsync();
+        // Task<List<OcrDto>> GetListAsync();
+        Task<string> GetTokenAsync();
     }
 }

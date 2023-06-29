@@ -198,7 +198,7 @@ $(function () {
                                         //editModal.open({ id: data.record.id });
                                         faxVerification.configuration.config.assignDocument({ "userID": data.record.id, "documentID": data.record.id })
                                             .then(function () {
-                                                abp.notify.info(l('SuccessfullyAssgiend'));
+                                                abp.notify.info('SuccessfullyAssgiend');
                                                 $('#BooksTable').DataTable().ajax.reload();
                                             });
 
@@ -218,7 +218,7 @@ $(function () {
                                     text: "Edit",
                                     action: function (data) {
 
-                                        debugger;
+                                        
                                         if (data.record.assignedTo != null && data.record.assignedTo != undefined && data.record.assignedTo != "") {
                                             if (data.record.assignedTo == data.record.currentUserID) {
                                                 editModal.open({ id: data.record.id });
@@ -259,9 +259,11 @@ $(function () {
                                     text: "Unassign",
                                     action: function (data) {
                                         //editModal.open({ id: data.record.id });
-                                        faxVerification.configuration.config.UnAssignDocument({ "userID": data.record.id, "documentID": data.record.id })
+                                        faxVerification.configuration.config.unAssignDocument({ "userID": data.record.id, "documentID": data.record.id })
                                             .then(function () {
-                                                abp.notify.info(l('Successfully Unassgiend'));
+                                                abp.notify.info('Successfully Unassgiend');
+
+
                                                 $('#BooksTable').DataTable().ajax.reload();
                                             });
 

@@ -16,6 +16,7 @@ using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Volo.Abp.Users;
 using static FaxVerification.Web.Pages.OCR.EditModalModel;
 //using Microsoft.Extensions.Configuration;
 //using Castle.Core.Configuration;
@@ -34,10 +35,13 @@ namespace FaxVerification.Web.Pages.OCR
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment Environment;
         private readonly IOcrAppService _ocrAppService;
-        public EditModalModel(IOcrAppService ocrAppService, IConfiguration configuration, IWebHostEnvironment _environment)
+        private readonly ICurrentUser _currentUser;
+
+        public EditModalModel(IOcrAppService ocrAppService, IConfiguration configuration, IWebHostEnvironment _environment, ICurrentUser currentUser)
         {
             _ocrAppService = ocrAppService;
             _configuration = configuration;
+            _currentUser = currentUser;
             Environment = _environment;
             Data = new EditDetailsViewModel();
             Data.FormConfiguration = new ConfigurationSettViewModel();
@@ -67,6 +71,7 @@ namespace FaxVerification.Web.Pages.OCR
             //string Formconfigutration = _configuration.GetValue<string>("ConfigurationAtrributes");
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
+            Data.CurrentUserID = Convert.ToString(_currentUser.Id);
 
             var person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
 
@@ -90,14 +95,47 @@ namespace FaxVerification.Web.Pages.OCR
             //    Formconfigutration += "~" + person.Attribute_8;
 
             for(var i = 0; i < person.Fields.Count; i++)
-            {
-                var field = Data.PersonDetails.AdditionalFields[i];
-                //person.Fields[i].FieldName = field.FieldName;
-                person.Fields[i].RegExpression = field.Text;
-                person.Fields[i].CoOrdinates = field.Rectangle + "," + field.PageNumber;
+            { 
+                if(i < Data.PersonDetails.Invoice.AdditionalFields.Count)
+                {
+                    //var field = Data.PersonDetails.Invoice.AdditionalFields[i];
+                    ////person.Fields[i].FieldName = field.FieldName;
+                    //person.Fields[i].RegExpression = field.Text;
+                    //person.Fields[i].CoOrdinates = field.Rectangle + "," + field.PageNumber;
+
+                    person.Fields[i].RegExpression = "";
+                    person.Fields[i].CoOrdinates = "";
+                }
+                else
+                {
+                    person.Fields[i].RegExpression ="";
+                    person.Fields[i].CoOrdinates = "";
+                }
 
             }
+           for(var i = 0; i < Data.PersonDetails.Invoice.AdditionalFields.Count; i++)
+            {
+                for(var j=0;j< person.Fields.Count; j++)
+                {
+                    if (person.Fields[j].FieldName == Data.PersonDetails.Invoice.AdditionalFields[i].FieldName)
+                    {
+                        var field = Data.PersonDetails.Invoice.AdditionalFields[i];
+                        person.Fields[j].RegExpression = field.Text;
+                        person.Fields[j].CoOrdinates = field.Rectangle + "," + field.PageNumber;
 
+                    }
+
+
+                    if (Data.PersonDetails.Invoice.AdditionalFields[i].Text != "" && Data.PersonDetails.Invoice.AdditionalFields[i].Text != null)
+                    {
+
+                    }
+
+
+
+                }
+
+            }
 
             Data.FormConfiguration = person;
             //Configu = person;
@@ -148,6 +186,9 @@ namespace FaxVerification.Web.Pages.OCR
             public string FilePath { get; set; }
             [HiddenInput]
             public ConfigurationSettViewModel FormConfiguration { get; set; }
+
+            [HiddenInput]
+            public string CurrentUserID { get; set; }
         }
 
         public class ConfigurationSettViewModel
@@ -201,6 +242,8 @@ namespace FaxVerification.Web.Pages.OCR
             public Tax Tax { get; set; }
             public GrossAmount Total { get; set; }
 
+            public List<ExtraFields> AdditionalFields { get; set; }
+
             public Invoice()
             {
                 InvNum = new();
@@ -210,6 +253,7 @@ namespace FaxVerification.Web.Pages.OCR
                 VendorName = new();
                 Tax = new();
                 Total = new();
+                AdditionalFields = new List<ExtraFields>();
             }
 
 

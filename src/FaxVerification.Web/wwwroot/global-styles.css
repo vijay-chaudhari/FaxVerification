@@ -1,6 +1,96 @@
 /* Your Global Styles */
+/* --lpx-logo: url('/images/logo/leptonx/logo-light.png');*/
 
 :root .lpx-brand-logo {
-    --lpx-logo: url('/images/logo/leptonx/logo-light.png');
+    --lpx-logo: url('/images/cyret logo.jpg');
     --lpx-logo-icon: url('/images/logo/leptonx/logo-light-thumbnail.png');
+}
+
+
+
+
+
+/*$primary-color:#355dff;
+$enable-shadows:true;
+@mixin theme($theme: $primary-color) {
+    background-color: #355dff !important;color: #fff;
+}*/
+/*
+%backgroundColor-shared {
+    background-color: #355dff;
+}
+*/
+
+
+.lpx-sidebar .lpx-logo-container {
+    background-color: #355dff;
+}
+
+.lpx-sidebar-container .lpx-sidebar .lpx-nav .lpx-nav-menu {
+    background-color: #355dff;
+}
+
+.lpx-nav-menu {
+    background-color: #355dff !important;color: #fff;
+}
+
+.lpx-menu-item-link.selected {
+    color: #fff;
+    background-image: linear-gradient(270.08deg, rgba(255, 255, 255, 0.2) 0.07%, rgba(255, 255, 255, 0) 99.93%);
+}
+
+.lpx-menu-item-link {
+    background-color: #355dff !important;
+    color: #fff;
+}
+
+    .lpx-menu-item-link:hover {
+        color: #fff;
+        background-color: #a71616;
+    }
+
+/*.lpx-nav-menu .lpx-menu-item-link .lpx-menu-item-text {
+    font-family: 'Avenir LT Std';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+}
+*/
+.lpx-nav-menu .lpx-menu-item-link.selected {
+    font-weight: bold;
+}
+
+.lpx-nav-menu .lpx-inner-menu-item .lpx-menu-item-link.selected, .lpx-nav-menu .lpx-inner-menu-item {
+    background-color: #355dff;
+    color: #202224;
+/*    font-family: 'Avenir LT Std' !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 20px;*/
+}
+
+.lpx-sidebar {
+    background-color: #355dff;
+}
+
+.form-check-input {
+    margin-right: 2%;
+}
+
+.confirmation-button--approve {
+    background-color: #355dff !important;color: #fff;
+}
+
+.hideComponent {
+    display: none !important;
+}
+
+.lpx-nav-menu .lpx-menu-item-link.selected .lpx-menu-item-icon, .lpx-nav-menu .lpx-menu-item-link.selected .dd-icon {
+    color: #202224;
+    opacity: 1;
+}
+
+.lpx-nav-menu .lpx-menu-item-link {
+    color: #ffffff !important;
 }

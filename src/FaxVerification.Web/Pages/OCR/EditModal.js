@@ -38,9 +38,54 @@
                 var OutputPath = document.querySelector('#Data_OutputPath').value;
                 var OCRText = document.querySelector('#Data_OCRText').value;
                 var Confidence = document.querySelector('#Data_Confidence').value;
+
                 var InputPath = document.querySelector('#Data_InputPath').value;
+                var AssignTo = document.querySelector('#Data_CurrentUserID').value;
 
                 var AdditionalFields = [];
+
+                var InParams = [];
+
+
+                var FileName = document.querySelector("#Data_FilePath").value;
+
+
+                const date = new Date();
+
+                let currentDay = String(date.getDate()).padStart(2, '0');
+
+                let currentMonth = String(date.getMonth() + 1).padStart(2, "0");
+
+                let currentYear = date.getFullYear();
+
+                // we will display the date as DD-MM-YYYY 
+
+                let currentDate = `${currentYear}/${currentMonth}/${currentDay}`;
+
+                let firstParam = {
+                    "id": 1,
+                    "value": AssignTo
+                }
+                let secondParam = {
+                    "id": 2,
+                    "value": FileName
+                }
+                let tirdParam = {
+                    "id": 3,
+                    "value": currentDate
+                }
+
+                let sixParam = {
+                    "id": 6,
+                    "value": FileName
+                }
+
+                InParams.push(firstParam);
+                InParams.push(secondParam);
+                InParams.push(tirdParam);
+                InParams.push(sixParam);
+
+                var co = 6;
 
                 for (var i = 1; i <= DocumnetNumber; i++) {
 
@@ -56,12 +101,71 @@
 
                     var obj = {
                         //"TemplateId":"",
-                        "fieldName": "Attribute_"+i,
+                        "FieldName": "Attribute_"+i,
                         "Text": FieldName,
-                        "coOrdinates": cords ,
+                        "Rectangle": cords ,
                         "PageNumber": parseInt(page)
                     }
                     AdditionalFields.push(obj);
+
+
+                    if (i == 3) {
+                        var inparObj = {
+                            "id": (8),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 4) {
+                        var inparObj = {
+                            "id": (9),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 7) {
+                        var inparObj = {
+                            "id": (10),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 8) {
+                        var inparObj = {
+                            "id": (11),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 2) {
+                        var inparObj = {
+                            "id": (12),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 9) {
+                        var inparObj = {
+                            "id": (13),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+                    if (i == 10) {
+                        var inparObj = {
+                            "id": (14),
+                            "value": FieldName
+                        }
+
+                        InParams.push(inparObj);
+                    }
+
 
                 }
 
@@ -75,8 +179,8 @@
                     "OCRText" : OCRText,
                     "Confidence": Confidence,
                     "Output": JSON.stringify(output),
-                    "InputPath" : InputPath
-
+                    "InputPath": InputPath,
+                    "AssignedTo": AssignTo
 
                 };
 
@@ -89,6 +193,38 @@
                     success: function (result) {
                         // Handle the success response
                         console.log(result);
+
+
+
+
+                        var on = {
+                            "token": "",
+                            "name": "UpdateOCRDataInWorkBenchInvoice",
+                            "isAsync": false,
+                            "inParams": InParams,
+                            "outputIds": [
+                                1,
+                                2,
+                                3,
+                                6,
+                                8,
+                                9,
+                                10,
+                                11,
+                                12,
+                                13,
+                                14
+                            ]
+                        };
+
+
+                        faxVerification.records.ocr.uPDATEOCRDATA(on).then(function (e) {
+
+                            debugger;
+                            
+                        });
+                            
+
                         window.location = "";
                     },
                     error: function (xhr, status, error) {
@@ -101,13 +237,121 @@
             $('#cancelModal').click(function () {
                 location.reload();
             });
+
+
+            function CreateDynamicTable(rows, columns, headerLabels) {
+
+                // Create the table element
+                var table = document.createElement('table');
+
+                // Create table head
+                var thead = document.createElement('thead');
+
+                // Create header row
+                var headerRow = document.createElement('tr');
+
+                // Create header columns
+                for (var i = 0; i < columns; i++) {
+                    var headerCell = document.createElement('th');
+                    headerCell.textContent = headerLabels[i] || '';
+
+                    headerCell.classList.add("TableBorder");
+
+
+                    headerRow.appendChild(headerCell);
+                }
+
+                thead.style.backgroundColor = "#d9d5cc";
+                // Append header row to the table head
+                thead.appendChild(headerRow);
+
+                // Append table head to the table
+                table.appendChild(thead);
+
+                // Create table body
+                var tbody = document.createElement('tbody');
+
+                // Create rows
+                for (var j = 0; j < rows; j++) {
+                    var row = document.createElement('tr');
+
+                    // Create columns
+                    for (var k = 0; k < columns; k++) {
+                        var cell = document.createElement('td');
+                        cell.innerHTML = ' <input id="R_' + j + '_C_' + k + ' " class="form-control" />';
+                        cell.classList.add("TableBorder");
+                        row.appendChild(cell);
+                    }
+
+                    // Append row to the table body
+                    tbody.appendChild(row);
+                }
+
+                // Append table body to the table
+                table.appendChild(tbody);
+
+
+                table.classList.add("TableBorder");
+
+                // Return the generated table
+                return table;
+
+
+
+
+
+
+
+
+            }
+
+           
+
+
+            var headerLabels = ['Item', 'Quantity', 'Rate', 'Amount'];
+            var dynamicTable = CreateDynamicTable(3, 4, headerLabels);
+
+            // Add the table to the document body
+            document.getElementById("DynamicTable").appendChild(dynamicTable);
+
+            $("#addcolumn").click(function () {
+                
+                var columncount = $('#DynamicTable th').length;
+                var rowCount = $('#DynamicTable tr').length;
+
+                nextCoumn = parseInt(columncount) + 1;
+                headerLabels.push("Header " + nextCoumn);
+                var dynamicTable = CreateDynamicTable(rowCount,nextCoumn, headerLabels);
+                $('#DynamicTable').empty();
+                document.getElementById("DynamicTable").appendChild(dynamicTable);
+            });
+
+            $("#addrow").click(function () {
+
+                debugger
+                var columncount = $('#DynamicTable th').length;
+                var rowCount = $('#DynamicTable tr').length;
+                nextRow = parseInt(rowCount);
+                var dynamicTable = CreateDynamicTable(nextRow, columncount, headerLabels);
+                $('#DynamicTable').empty();
+                document.getElementById("DynamicTable").appendChild(dynamicTable);
+            });
+
+
+
         });
+
+
+     
+
+
+
 
 
         let fileName = "./Pdf/" + document.querySelector("#Data_FilePath").value;
 
         WebViewer({
-            path: "./libs/pdfjs-express",
+            path: "./libs/pdfjs-express/lib",
             disabledElements: ['ribbons', 'menuButton', 'toggleNotesButton'],
             preloadWorker: WebViewer.WorkerTypes.PDF,
             initialDoc: fileName,
@@ -250,7 +494,7 @@
 
                 if (activeElement.id.includes("Attribute_")) {
                     //alert(activeElement.id);
-                    
+
                     var elecmetID = activeElement.id.split('_');
                     var elemid = elecmetID[1];
 
@@ -261,6 +505,15 @@
                     hightLightAnnnotation(cords.split(','), pageIndex);
 
                 }
+                else {
+                    if (activeElement.id.includes("R_")) {
+
+                        hightLightAnnnotation(cords.split(','), pageIndex);
+
+                    }
+                }
+
+             
 
 
             };
@@ -361,7 +614,7 @@
                     }
 
                     if (input.id.includes("Attribute_")) {
-                        debugger;
+                        
                         //alert(activeElement.id);
                         var elecmetID = activeElement.id.split('_');
                         var elemid = elecmetID[1];

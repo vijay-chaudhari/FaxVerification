@@ -13,13 +13,13 @@
 
     #left {
         position: absolute;
-        width: 66%;
+        width: 56%;
         height:99%;
     }
 
     #right {
         float: right;
-        width: 30%;
+        width: 40%;
         height: 99%;
         overflow-y: auto;
     }
@@ -44,6 +44,14 @@
 
     .Hide_attr{
         display:none !important;
+    }
+
+    .TableBorder{
+  
+        border : 1px solid #000;
+        border-color: #000;
+        border-width : 1px;
+        border-style : solid;
     }
 </style>
 
@@ -120,6 +128,7 @@
                 <input asp-for="Data.OCRText" class="form-control" />
                 <input asp-for="Data.OutputPath" class="form-control" />
                 <input asp-for="Data.Id" class="form-control" />
+                <input asp-for="Data.CurrentUserID" class="form-control" />
 
        @*         <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
                 <input asp-for="Data.PersonDetails.AttributeCords_2" class="form-control" />
@@ -133,6 +142,25 @@
 
 
             </div>
+
+                <div class="form-group" style="margin-top:2%;">
+
+                <div id="DynamicTable">
+
+
+                </div>
+
+
+            </div>
+
+                <div class="form-group" style="margin-top:2%;">
+                    <div class="d-md-flex float-end" style="margin-right: 2%;">
+                           <input type="button" class="btn btn-primary"  value="Add Column" id="addcolumn"/>
+
+                        <input type="button" class="btn btn-primary" style="margin-left:2%; margin-right:2%;" value="Add Row" id="addrow" />
+                    </div>
+
+                </div>
         </div>
     </abp-modal-body>
     @*<abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>*@

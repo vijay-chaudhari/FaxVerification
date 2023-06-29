@@ -14,6 +14,7 @@ public class FaxVerificationWebAutoMapperProfile : Profile
         CreateMap<OcrDto, Pages.OCR.EditModalModel.EditDetailsViewModel>()
             .ForMember(x=>x.PersonDetails, opt=>opt.Ignore())
             .ForMember(x=>x.FormConfiguration, opt=>opt.Ignore())
+            .ForMember(x=>x.CurrentUserID, opt=>opt.Ignore())
             .ForMember(x=>x.FilePath, opt=>opt.Ignore());
 
         CreateMap<ConfigurationSettings, ConfigurationSettViewModel>();

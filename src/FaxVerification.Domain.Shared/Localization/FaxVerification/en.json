@@ -3,7 +3,7 @@
   "texts": {
     "Menu:Home": "Home",
     "Menu:Documents": "Documents",
-    "Menu:Validate": "Validate",
+    "Menu:Validate": "Doc Validation",
     "Welcome": "Welcome",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
   }

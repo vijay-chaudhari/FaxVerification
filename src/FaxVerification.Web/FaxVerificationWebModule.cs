@@ -86,6 +86,8 @@ public class FaxVerificationWebModule : AbpModule
             option.AutoValidate = false;
         });
         context.Services.AddTransient<OcrAppService>();
+        context.Services.AddTransient<OCRWorkBenchIntegration>();
+        //context.Services.AddTransient<OCRWorkBenchIntegration>();
         ConfigureAuthentication(context);
         ConfigureUrls(configuration);
         ConfigureBundles();
