@@ -1,6 +1,7 @@
 ﻿
 using FaxVerification.Configuration;
 using FaxVerification.Records;
+using FaxVerification.TemplateRegistration;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -59,6 +60,9 @@ public class FaxVerificationDbContext :
 
     public DbSet<ImageOcr> Records { get; set; }
     public DbSet<ConfigurationSettings> AttributeConfig  { get; set; }
+
+    public DbSet<Registration> Registration { get; set; }
+        
     public FaxVerificationDbContext(DbContextOptions<FaxVerificationDbContext> options)
         : base(options)
     {
@@ -91,6 +95,12 @@ public class FaxVerificationDbContext :
         builder.Entity<FieldConfig>(b =>
         {
             b.ToTable(FaxVerificationConsts.DbTablePrefix + "FieldConfig", FaxVerificationConsts.DbSchema);
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<Registration>(b =>
+        {
+            b.ToTable(FaxVerificationConsts.DbTablePrefix + "Registration", FaxVerificationConsts.DbSchema);
             b.ConfigureByConvention();
         });
 

@@ -64,6 +64,12 @@ public class FaxVerificationMenuContributor : IMenuContributor
                 l["Configuration"],
                 url: "/Configuration"
                 ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
+            ).AddItem(
+                new ApplicationMenuItem(
+                "Template_Registration.Validate",
+                l["Registration"],
+                url: "/Template_Registration"
+                ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
             )
          );
     }

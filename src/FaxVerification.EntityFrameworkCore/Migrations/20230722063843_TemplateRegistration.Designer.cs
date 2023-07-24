@@ -4,6 +4,7 @@ using FaxVerification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace FaxVerification.Migrations
 {
     [DbContext(typeof(FaxVerificationDbContext))]
-    partial class FaxVerificationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230722063843_TemplateRegistration")]
+    partial class TemplateRegistration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,7 +257,7 @@ namespace FaxVerification.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRegistration", (string)null);
+                    b.ToTable("Registration");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

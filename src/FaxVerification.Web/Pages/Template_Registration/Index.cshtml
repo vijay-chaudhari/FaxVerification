@@ -1,0 +1,29 @@
+﻿@page
+@model FaxVerification.Web.Pages.Template_Registration.IndexModel
+@using FaxVerification.Permissions;
+@using FaxVerification.Web.Pages.OCR
+@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService AuthorizationService
+@section styles{
+    <abp-style src="/Pages/index.css" />
+}
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src='https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js'></script>
+    <abp-script src="/Pages/Template_Registration/Index.js" />
+    <abp-script src="/Pages/Template_Registration/Registration.js" />
+    <script src="~/libs/pdfjs-express/lib/webviewer.min.js"></script>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size="_8">
+                <abp-card-title>Pending Verification</abp-card-title>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="BooksTable"></abp-table>
+    </abp-card-body>
+</abp-card>

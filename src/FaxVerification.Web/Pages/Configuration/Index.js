@@ -132,6 +132,108 @@
 
         document.getElementById("FieldsCount").value = (DocumnetNumber + 1);
     });
+
+
+
+
+
+    function CreateDynamicTable(rows, columns, headerLabels) {
+
+        // Create the table element
+        var table = document.createElement('table');
+
+        // Create table head
+        var thead = document.createElement('thead');
+
+        // Create header row
+        var headerRow = document.createElement('tr');
+
+        // Create header columns
+        for (var i = 0; i < columns; i++) {
+            var headerCell = document.createElement('th');
+            headerCell.textContent = headerLabels[i] || '';
+
+            headerCell.classList.add("TableBorder");
+
+
+            headerRow.appendChild(headerCell);
+        }
+
+        thead.style.backgroundColor = "#d9d5cc";
+        // Append header row to the table head
+        thead.appendChild(headerRow);
+
+        // Append table head to the table
+        table.appendChild(thead);
+
+        // Create table body
+        var tbody = document.createElement('tbody');
+
+        // Create rows
+        for (var j = 0; j < rows; j++) {
+            var row = document.createElement('tr');
+
+            // Create columns
+            for (var k = 0; k < columns; k++) {
+                var cell = document.createElement('td');
+                cell.innerHTML = ' <input id="R_' + j + '_C_' + k + ' " class="form-control" />';
+                cell.classList.add("TableBorder");
+                row.appendChild(cell);
+            }
+
+            // Append row to the table body
+            tbody.appendChild(row);
+        }
+
+        // Append table body to the table
+        table.appendChild(tbody);
+
+
+        table.classList.add("TableBorder");
+
+        // Return the generated table
+        return table;
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+    var headerLabels = ['Item', 'Quantity', 'Rate', 'Amount'];
+    var dynamicTable = CreateDynamicTable(3, 4, headerLabels);
+
+    // Add the table to the document body
+    document.getElementById("DynamicTable").appendChild(dynamicTable);
+
+    $("#addcolumn").click(function () {
+
+        var columncount = $('#DynamicTable th').length;
+        var rowCount = $('#DynamicTable tr').length;
+
+        nextCoumn = parseInt(columncount) + 1;
+        headerLabels.push("Header " + nextCoumn);
+        var dynamicTable = CreateDynamicTable(rowCount, nextCoumn, headerLabels);
+        $('#DynamicTable').empty();
+        document.getElementById("DynamicTable").appendChild(dynamicTable);
+    });
+
+    $("#addrow").click(function () {
+
+        debugger
+        var columncount = $('#DynamicTable th').length;
+        var rowCount = $('#DynamicTable tr').length;
+        nextRow = parseInt(rowCount);
+        var dynamicTable = CreateDynamicTable(nextRow, columncount, headerLabels);
+        $('#DynamicTable').empty();
+        document.getElementById("DynamicTable").appendChild(dynamicTable);
+    });
 });
 
 

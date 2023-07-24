@@ -6,8 +6,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>FaxVerification</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
+	
+	<ItemGroup>
     <ProjectReference Include="..\FaxVerification.Domain\FaxVerification.Domain.csproj" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="7.0.0" />
     <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="7.0.0" />

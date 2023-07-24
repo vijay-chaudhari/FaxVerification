@@ -3,6 +3,7 @@ using FaxVerification.Localization;
 using FaxVerification.MultiTenancy;
 using FaxVerification.Permissions;
 using FaxVerification.Records;
+using FaxVerification.TemplateRegistration;
 using FaxVerification.Web.Menus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -86,6 +87,7 @@ public class FaxVerificationWebModule : AbpModule
             option.AutoValidate = false;
         });
         context.Services.AddTransient<OcrAppService>();
+        context.Services.AddTransient<RegistrationService>();
         context.Services.AddTransient<OCRWorkBenchIntegration>();
         //context.Services.AddTransient<OCRWorkBenchIntegration>();
         ConfigureAuthentication(context);

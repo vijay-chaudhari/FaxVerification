@@ -1,0 +1,173 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model FaxVerification.Web.Pages.Template_Registration.RegistrationModel
+@{
+}
+
+<style type="text/css">
+    #content, html, body {
+        left: 0;
+        right: 0;
+        height: 100%;
+    }
+
+    #left {
+        position: absolute;
+        width: 56%;
+        height: 99%;
+    }
+
+    #right {
+        float: right;
+        width: 40%;
+        height: 99%;
+        overflow-y: auto;
+    }
+
+    #pdfViewer {
+        position: absolute;
+        direction: ltr;
+        border: solid 1px black;
+        z-index: 0;
+    }
+
+    #drawCanvas {
+        position: absolute;
+        direction: ltr;
+        z-index: 1;
+        cursor: crosshair;
+    }
+
+    #selectionrect {
+        border: 1px solid red;
+    }
+
+    .Hide_attr {
+        display: none !important;
+    }
+
+    .TableBorder {
+        border: 1px solid #000;
+        border-color: #000;
+        border-width: 1px;
+        border-style: solid;
+    }
+</style>
+
+@*<abp-dynamic-form abp-model="Data" asp-page="/OCR/EditModal">
+    <abp-modal size="Fullscreen">
+        <abp-modal-body style="overflow:hidden">
+            <div id="left">
+                <div style="width:100%; height:100%; position:absolute" id="viewer"></div>
+            </div>
+            <div id="right">
+                <div id="form-content">
+                    <abp-form-content id="formID" />
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</abp-dynamic-form>*@
+<form abp-model="Data" asp-page="/OCR/EditModal">
+    <abp-modal size="Fullscreen">
+        <abp-modal-body style="overflow:hidden">
+            <div id="left">
+                <div style="width:100%; height:100%; position:absolute" id="viewer"></div>
+            </div>
+            <div id="right">
+                @* <div id="form-content">
+                <abp-form-content id="formID" />
+                </div>*@
+                <div class="form-group">
+                    @{
+                        int i = 0;
+
+                        @foreach (var item in Model.Data.FormConfiguration.Fields)
+                        {
+                            i++;
+                            string ValueID = "Attribute_" + i;
+                            string CordinateValueID = "AttributeCord_" + i;
+                            string label = "lbl_" + i;
+                            <label id="@label" asp-for="@item.FieldName" class="control-label">@item.FieldName.ToString()</label>
+                            <input asp-for="@item.RegExpression" id="@ValueID" name="@ValueID" class="form-control" value="@item.RegExpression" />
+                            <input asp-for="@item.CoOrdinates" id="@CordinateValueID" name="@CordinateValueID" class="form-control Hide_attr" value="@item.CoOrdinates" />
+                        }
+                    }
+
+                    <input id="FieldsCount" type="hidden" value="@Model.Data.FormConfiguration.Fields.Count" />
+                    @*
+                    <label id="lbl_1" asp-for="Data.PersonDetails.Attribute_1" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_1" class="form-control" />
+
+                    <label id="lbl_2" asp-for="Data.PersonDetails.Attribute_2" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_2" class="form-control" />
+
+                    <label id="lbl_3" asp-for="Data.PersonDetails.Attribute_3" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_3" class="form-control" />
+
+                    <label id="lbl_4" asp-for="Data.PersonDetails.Attribute_4" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_4" class="form-control" />
+
+                    <label id="lbl_5" asp-for="Data.PersonDetails.Attribute_5" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_5" class="form-control" />
+
+                    <label id="lbl_6" asp-for="Data.PersonDetails.Attribute_6" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_6" class="form-control" />
+
+                    <label id="lbl_7" asp-for="Data.PersonDetails.Attribute_7" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_7" class="form-control" />
+
+                    <label id="lbl_8" asp-for="Data.PersonDetails.Attribute_8" class="control-label"></label>
+                    <input asp-for="Data.PersonDetails.Attribute_8" class="form-control" />*@
+
+                    <input asp-for="Data.FilePath" class="form-control" />
+                    <input asp-for="Data.Id" class="form-control" />
+                    <input asp-for="Data.CurrentUserID" class="form-control" />
+                    <input asp-for="Data.TableCordinates.Rectangle" class="form-control" />
+                    <input asp-for="Data.vendorNo" class="form-control" />
+                    <input asp-for="Data.TemplateName" class="form-control" />
+                    <input asp-for="Data.TableCordinates.PageNumber" class="form-control" />
+
+
+                    @*         <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_2" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_3" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_4" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_5" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_6" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_7" class="form-control" />
+                    <input asp-for="Data.PersonDetails.AttributeCords_8" class="form-control" />*@
+                    <input asp-for="Data.FormConfiguration" class="form-control" />
+
+                    <label id="lbl_1" class="control-label">Table Cordinates</label>
+                    <input id="table_cordinates" name="table_cordinates" class="form-control" value="" />
+                    <input id="table_cordinates_cods" name="table_cordinates_cods" class="form-control Hide_attr" value="" />
+                </div>
+@*
+                <div class="form-group" style="margin-top:2%;">
+
+                    <div id="DynamicTable">
+                    </div>
+
+
+                </div>
+
+                <div class="form-group" style="margin-top:2%;">
+                    <div class="d-md-flex float-end" style="margin-right: 2%;">
+                        <input type="button" class="btn btn-primary" value="Add Column" id="addcolumn" />
+
+                        <input type="button" class="btn btn-primary" style="margin-left:2%; margin-right:2%;" value="Add Row" id="addrow" />
+                    </div>
+
+                </div>*@
+            </div>
+        </abp-modal-body>
+        @*<abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>*@
+        <abp-modal-footer style="padding-bottom:1px; padding-top:5px">
+            <abp-button button-type="Default" id="cancelModal" text="Cancel"></abp-button>
+            <abp-button button-type="Primary" id="saveConfig" text="Save"></abp-button>
+        </abp-modal-footer>
+
+    </abp-modal>
+</form>
