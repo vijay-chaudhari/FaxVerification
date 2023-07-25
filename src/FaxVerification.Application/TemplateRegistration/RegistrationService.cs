@@ -46,5 +46,25 @@ namespace FaxVerification.TemplateRegistration
                 Console.WriteLine(iox.Message);
             }
         }
+
+        public async Task<Registration> GetConfigByVendorNo(string VendorNo)
+        {
+            var query = await Repository.GetQueryableAsync();
+            try
+            {
+                List<Registration> configurationList = query.Where(x => x.VendorNo == VendorNo).ToList();
+                return configurationList.FirstOrDefault();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            Registration E = new Registration();
+
+            return E;
+
+        }
+
+
     }
 }
