@@ -69,7 +69,7 @@
         <abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
     </abp-modal>
 </abp-dynamic-form>*@
-<form abp-model="Data" asp-page="/OCR/EditModal">
+<form abp-model="Data" asp-page="/Template_Registration/Registration">
     <abp-modal size="Fullscreen">
         <abp-modal-body style="overflow:hidden">
             <div id="left">
@@ -128,6 +128,7 @@
                     <input asp-for="Data.vendorNo" class="form-control" />
                     <input asp-for="Data.TemplateName" class="form-control" />
                     <input asp-for="Data.TableCordinates.PageNumber" class="form-control" />
+                    <input asp-for="Data.TableCordinates.Text" class="form-control" />
 
 
                     @*         <input asp-for="Data.PersonDetails.AttributeCords_1" class="form-control" />
@@ -143,9 +144,13 @@
                     <label id="lbl_1" class="control-label">Table Cordinates</label>
                     <input id="table_cordinates" name="table_cordinates" class="form-control" value="" />
                     <input id="table_cordinates_cods" name="table_cordinates_cods" class="form-control Hide_attr" value="" />
+
+
+
+                    
                 </div>
-@*
-                <div class="form-group" style="margin-top:2%;">
+
+                <div class="form-group" style="margin-top:2%;display :none;">
 
                     <div id="DynamicTable">
                     </div>
@@ -153,14 +158,14 @@
 
                 </div>
 
-                <div class="form-group" style="margin-top:2%;">
+                <div class="form-group" style="margin-top:2%;display :none;">
                     <div class="d-md-flex float-end" style="margin-right: 2%;">
                         <input type="button" class="btn btn-primary" value="Add Column" id="addcolumn" />
 
                         <input type="button" class="btn btn-primary" style="margin-left:2%; margin-right:2%;" value="Add Row" id="addrow" />
                     </div>
 
-                </div>*@
+                </div>
             </div>
         </abp-modal-body>
         @*<abp-modal-footer style="padding-bottom:1px; padding-top:5px" buttons="(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>*@

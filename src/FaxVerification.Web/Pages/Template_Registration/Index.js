@@ -32,16 +32,38 @@ $(function () {
                     rowAction: {
                         items:
                             [
-
-                              
                                 {
                                     text: "Register",
+                                    action: function (data) {         
+                                         editModal.open({ id: data.record.id });
+                                    },
+                                    visible: function (data) {
+                                        
+                                        if (data.vendorNo != null && data.vendorNo != undefined && data.vendorNo != "") {
+                                            
+                                            return false;
+                                            }
+                                        else {
+                                            
+                                            return true;
+                                        }
+                                    }
+                                },
+                                {
+                                    text: "Edit",
                                     action: function (data) {
-
-
-                                       
-                                                editModal.open({ id: data.record.id });
-                                    
+                                        editModal.open({ id: data.record.id });
+                                    },
+                                    visible: function (data) {
+                                        
+                                        if (data.vendorNo != null && data.vendorNo != undefined && data.vendorNo != "") {
+                                            
+                                            return true;
+                                        }
+                                        else {
+                                            
+                                            return false;
+                                        }
                                     }
                                 }
                             ]
@@ -56,8 +78,9 @@ $(function () {
                 },
                 {
                     title: "Vendor Name",
-                    data: "vendorName",
+                    data: "vendorNo",
                     render: function (data) {
+
                         return data == null ? "" : data;
                     }
                 },

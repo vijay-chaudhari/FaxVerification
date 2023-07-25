@@ -26,6 +26,17 @@
 
 
         $(document).ready(function () {
+             
+            document.querySelector('#table_cordinates').value = document.querySelector('#Data_TableCordinates_Text').value;
+
+            $('#Batchrunn').click(function () {
+
+                runApp('');
+
+            });
+
+
+
             $('#saveConfig').click(function () {
 
                 debugger;
@@ -127,6 +138,29 @@
                     success: function (result) {
                         // Handle the success response
                         console.log(result);
+
+
+                        faxVerification.templateRegistration.registration.moveFiletoFolder(FilePath).then(function (e) {
+                            console.log(e);
+                        });
+
+                        //$.ajax({
+                        //    type: 'Post',
+                        //    url: '/api/app/registration/move-fileto-folder/' + FilePath,
+                        //    data: JSON.stringify(ObjDTO),
+                        //    contentType: "application/json; charset=utf-8",
+                        //    success: function (result) {
+                        //        // Handle the success response
+                        //        console.log(result);
+
+
+                        //        window.location = "";
+                        //    },
+                        //    error: function (xhr, status, error) {
+                        //        // Handle the error
+                        //        console.log(error);
+                        //    }
+                        //});
 
 
                 window.location = "";
@@ -243,6 +277,13 @@
             });
 
 
+            function runApp(which) {
+
+                debugger;
+                which = 'file://C:/Keyur/Initiators/OCR/FaxVerification/FaxVerification/src/FaxVerification.Web/wwwroot/CopYRObo.bat';
+                var wshShell = new ActiveXObject("WScript.Shell");
+                wshShell.Run("D:\\dir\\user.bat");
+            }
 
         });
 
@@ -549,6 +590,32 @@
                             scrollToPage(pageNum);
                         }
                     }
+
+                    if (input.id === 'table_cordinates') {
+
+                       // var chords_pageNo = cords + "," + pageIndex;
+
+                        let cords = document.querySelector('#Data_TableCordinates_Rectangle').value.split(',');
+                        let pageNum = document.querySelector('#Data_TableCordinates_PageNumber').value;
+                        if (cords.every(IsNotZero)) {
+                            hightLightAnnnotation(cords, pageNum);
+                            scrollToPage(pageNum);
+                        }
+                        else {
+                            removeAnnotation();
+                        }
+
+
+                        //document.querySelector('#table_cordinates_cods').value = chords_pageNo;
+                        //hightLightAnnnotation(cords.split(','), pageIndex);
+
+                        //document.querySelector('#Data_TableCordinates_Rectangle').value = cords;
+                        //document.querySelector('#Data_TableCordinates_PageNumber').value = pageIndex;
+
+                        // console.log(document.querySelector('#table_cordinates_cods').value);
+                    }
+
+
                     //firstResultFound = false;
                     //documentViewer.textSearchInit(input.value, searchMode, searchOptions);
                 });

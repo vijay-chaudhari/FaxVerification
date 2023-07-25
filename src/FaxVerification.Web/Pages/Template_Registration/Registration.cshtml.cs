@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using Polly;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -35,6 +36,8 @@ namespace FaxVerification.Web.Pages.Template_Registration
         }
         public async Task OnGetAsync(Guid id)
         {
+
+
             var ImageOcrDto = await _registrationService.GetAsync(id);
             Data.Id = ImageOcrDto.Id;
             //Data.InputPath = ImageOcrDto.InputPath;
@@ -57,9 +60,12 @@ namespace FaxVerification.Web.Pages.Template_Registration
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
 
             Data.CurrentUserID = Convert.ToString(_currentUser.Id);
+            Data.WebRootFolder = Environment.WebRootPath;
+
+            var section = _configuration.GetValue<string>("PendingRegistrationFile:Destination");
 
             var person = JsonSerializer.Deserialize<ConfigurationSettViewModel>(fileContents);
-
+            Data.TableCordinates = new TableContent();
 
             //string Formconfigutration = "";
             //if (person.Attribute_1 != null)
@@ -112,6 +118,14 @@ namespace FaxVerification.Web.Pages.Template_Registration
                             person.Fields[j].RegExpression = field.Text;
                             person.Fields[j].CoOrdinates = field.Rectangle + "," + field.PageNumber;
 
+                        }
+
+                        if(Data.PersonDetails.AdditionalFields[i].FieldName == "TableCordinates")
+                        {
+                            var field = Data.PersonDetails.AdditionalFields[i];
+                            Data.TableCordinates.Rectangle = field.Rectangle;
+                            Data.TableCordinates.PageNumber = Convert.ToInt32(field.PageNumber);
+                            Data.TableCordinates.Text = field.Text;
                         }
 
 
@@ -179,6 +193,9 @@ namespace FaxVerification.Web.Pages.Template_Registration
 
         [HiddenInput]
         public string CurrentUserID { get; set; }
+        [HiddenInput]
+        public string WebRootFolder { get; set; }
+
 
         //public RegisterDetailsViewModel()
         //{
