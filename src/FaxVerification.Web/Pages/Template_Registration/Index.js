@@ -77,7 +77,7 @@ $(function () {
                     }
                 },
                 {
-                    title: "Vendor Name",
+                    title: "Vendor No",
                     data: "vendorNo",
                     render: function (data) {
 

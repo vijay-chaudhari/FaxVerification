@@ -26,6 +26,11 @@
 
 
         $(document).ready(function () {
+
+            var TableValies = document.querySelector('#Data_PersonDetails_TableDetailss').value;
+
+            //console.log(TableValies);
+
             $('#saveConfig').click(function () {
 
                 debugger;
@@ -278,7 +283,7 @@
                     // Create columns
                     for (var k = 0; k < columns; k++) {
                         var cell = document.createElement('td');
-                        cell.innerHTML = ' <input id="R_' + j + '_C_' + k + ' " class="form-control" />';
+                        cell.innerHTML = ' <input id="R_' + (j+1) + '_C_' + k + '" class="form-control" />';
                         cell.classList.add("TableBorder");
                         row.appendChild(cell);
                     }
@@ -305,14 +310,31 @@
 
             }
 
-           
+            debugger;
+            var TableValies = document.querySelector('#Data_PersonDetails_TableDetailss').value;
+            var TableObject = JSON.parse(TableValies);
+            var Row = TableObject.Rows;
+            var Column = TableObject.Columns;
+            var actualRowCount = (TableObject.Cells.length / Column)-1;
 
 
             var headerLabels = ['Item', 'Quantity', 'Rate', 'Amount'];
-            var dynamicTable = CreateDynamicTable(3, 4, headerLabels);
+
+            headerLabels = [];
+            for (var i = 0; i < Column; i++) {
+                var Colm = TableObject.Cells[i].Text;
+                headerLabels.push(Colm);
+            }
+
+
+
+
+            var dynamicTable = CreateDynamicTable(actualRowCount, Column, headerLabels);
 
             // Add the table to the document body
             document.getElementById("DynamicTable").appendChild(dynamicTable);
+
+            MappValues();
 
             $("#addcolumn").click(function () {
                 
@@ -338,11 +360,38 @@
             });
 
 
+            function MappValues() {
+                debugger;
+                var TableValies = document.querySelector('#Data_PersonDetails_TableDetailss').value;
+                var TableObject = JSON.parse(TableValies);
+
+                var Row = TableObject.Rows;
+                var Column = TableObject.Columns;
+                var actualRowCount = (TableObject.Cells.length / Column) - 1;
+
+                var ii = Column;
+                for (var i = 0; i < actualRowCount; i++) {
+
+                    for (var j = 0; j < Column; j++) {
+                        var Colm = TableObject.Cells[(j + ii)].Text;
+
+                        $("#R_" + (i + 1) + "_C_" + j).val(Colm);
+                    }
+                    ii = ii + ii;
+
+                }
+
+
+
+
+
+            }
 
         });
 
 
-     
+
+         
 
 
 

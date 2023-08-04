@@ -119,4 +119,73 @@ namespace FaxVerification.Records
         public List<object> SysErrors { get; set; }
     }
 
+
+    #region GetVendorNo
+
+    public class GridData1
+    {
+        public int Id { get; set; }
+        public string FullGridId { get; set; }
+        public Row Columns { get; set; }
+        public List<Row> Rowset { get; set; }
+        public Summary Summary { get; set; }
+    }
+
+    public class Row
+    {
+        public string F5643001_Y56EMDT { get; set; }
+        public string F5643001_Y56INVDT { get; set; }
+        public string F5643002_ITM { get; set; }
+        public string F5643002_UNCS { get; set; }
+        public string F5643001_S74IVD { get; set; }
+        public string F5643001_EXA { get; set; }
+        public string F5643001_VINV { get; set; }
+        public string F5643002_CITM { get; set; }
+        public string F5643001_KCOO { get; set; }
+        public string F5643001_VDNM { get; set; }
+        public string F5643001_DOCO { get; set; }
+        public string F5643001_Y56PSTS { get; set; }
+        public string F5643001_DCTO { get; set; }
+        public string F5643001_Y56EMSUB { get; set; }
+        public string F5643001_Y56VINVA { get; set; }
+        public string F5643002_LITM { get; set; }
+        public string F5643002_CRCD { get; set; }
+        public string F5643001_Y56EMID { get; set; }
+        public string F5643001_Y56TAXA { get; set; }
+        public string F5643002_AEXP { get; set; }
+        public string F5643002_UORG { get; set; }
+        public string F5643001_Y56TAMT { get; set; }
+        public string F5643001_AN8V { get; set; }
+    }
+
+    public class Summary
+    {
+        public int Records { get; set; }
+        public bool MoreRecords { get; set; }
+    }
+
+    public class Data
+    {
+        public GridData1 GridData { get; set; }
+    }
+
+    public class FsDataBrowseV550102
+    {
+        public string Title { get; set; }
+        public Data Data { get; set; }
+        public List<object> Errors { get; set; }
+        public List<object> Warnings { get; set; }
+    }
+
+    public class Root
+    {
+        public FsDataBrowseV550102 Fs_DATABROWSE_V550102 { get; set; }
+        public int StackId { get; set; }
+        public int StateId { get; set; }
+        public string Rid { get; set; }
+        public string CurrentApp { get; set; }
+        public string TimeStamp { get; set; }
+        public List<object> SysErrors { get; set; }
+    }
+    #endregion 
 }

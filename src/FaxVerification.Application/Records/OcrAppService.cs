@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.OpenIddict;
+using Volo.Abp.UI.Navigation;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace FaxVerification.Records
@@ -44,18 +46,19 @@ namespace FaxVerification.Records
             UpdatePolicyName = FaxVerificationPermissions.Documents.Edit;
             DeletePolicyName = FaxVerificationPermissions.Documents.Create;
 
-           // _configAppService = configAppService;
+            // _configAppService = configAppService;
 
         }
 
         public override async Task<PagedResultDto<OcrDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            //Task<PagedResultDto<OcrDto>> result = Repository.GetListAsync(input);
+            PagedResultDto<OcrDto> result1 = await base.GetListAsync(input);
             Guid? UserID = CurrentUser.Id;
             List<ImageOcr> resultlist = await Repository.GetListAsync(true);
-            var result = ObjectMapper.Map<List<ImageOcr>, List<OcrDto>>(resultlist).ToList();//.Where(a=>a.AssignedTo == UserID || a.AssignedTo == null).ToList();
-            result.ForEach(a => a.CurrentUserID = UserID);
-            return new PagedResultDto<OcrDto> { TotalCount = result.Count, Items = result }; ; //base.GetListAsync(input);
+            List<OcrDto> ocrDtos = result1.Items.ToList();
+            ocrDtos.ForEach(a => a.CurrentUserID = UserID);
+            return result1;
+
         }
 
 
@@ -65,13 +68,13 @@ namespace FaxVerification.Records
             HttpClient client = new HttpClient();
 
             string Token = await GetTokenAsync();
-             
+
             request.token = Token;
 
             string FileName = "";
-            foreach(var i in request.inParams)
+            foreach (var i in request.inParams)
             {
-                if(i.id == 6)
+                if (i.id == 6)
                 {
                     FileName = i.value;
                 }
@@ -79,7 +82,7 @@ namespace FaxVerification.Records
 
             string ISFileAvailable = "2"; //await CheckFileName(FileName,Token);
 
-            if(ISFileAvailable != "0")
+            if (ISFileAvailable != "0")
             {
 
 
@@ -98,7 +101,7 @@ namespace FaxVerification.Records
                         request.inParams.Remove(i);
                     }
 
-                    if(i.id == 6)
+                    if (i.id == 6)
                     {
                         i.value = Convert.ToString(emailSerial);
                     }
@@ -157,11 +160,11 @@ namespace FaxVerification.Records
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
-               
+
 
                 string ocrDataUrl = "http://123.201.35.66:9192/jderest/v2/bsfnservice";
 
@@ -185,9 +188,9 @@ namespace FaxVerification.Records
                 }
 
             }
-          
 
-          
+
+
         }
 
         private async Task CyrtAPIAsync(string emailSerial, string value)
@@ -267,7 +270,7 @@ namespace FaxVerification.Records
 
             string loginRequestBody = System.Text.Json.JsonSerializer.Serialize(user);
 
-           //"{\r\n    \"username\":\"harishp\",\r\n    \"password\":\"harishp\"\r\n}";
+            //"{\r\n    \"username\":\"harishp\",\r\n    \"password\":\"harishp\"\r\n}";
 
             HttpResponseMessage response = await client.PostAsync(loginUrl, new StringContent(loginRequestBody, Encoding.UTF8, "application/json"));
 
@@ -284,7 +287,7 @@ namespace FaxVerification.Records
                 return "Error";
             }
             // Handle the login response as needed
-           
+
         }
         static async Task ValidateToken(HttpClient client)
         {
@@ -298,7 +301,7 @@ namespace FaxVerification.Records
 
 
 
-        public async Task<string> CheckFileName(string FileName,string Token)
+        public async Task<string> CheckFileName(string FileName, string Token)
         {
             string url = "http://123.201.35.66:9192/jderest/v2/dataservice";
             //string username = "harishp";
@@ -350,11 +353,97 @@ namespace FaxVerification.Records
 
                     string itmcount = Convert.ToString(item);
 
-                    if( Convert.ToInt32(itmcount) >= 1)
+                    if (Convert.ToInt32(itmcount) >= 1)
                     {
-                        item = ass.fs_DATABROWSE_V5643001.data.gridData.rowset[0].F5643001_WFEMAILNO;       
+                        item = ass.fs_DATABROWSE_V5643001.data.gridData.rowset[0].F5643001_WFEMAILNO;
                     }
                     return Convert.ToString(item);
+                }
+                else
+                {
+                    return "Error";
+                }
+            }
+        }
+
+
+
+        public async Task<string> GetVendorName(string EmailSr)
+        {
+            string url = "http://123.201.35.66:9192/jderest/v2/dataservice";
+            //string username = "harishp";
+            string Token = await GetTokenAsync();
+            //string password = "harishp";
+            //string base64Credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+
+            string data = @"{
+        ""token"": ""{ToKen}"",
+        ""targetName"": ""V550102"",
+        ""targetType"": ""view"",
+        ""dataServiceType"": ""BROWSE"",
+        ""maxPageSize"": ""3000"",
+        ""returnControlIDs"": ""F5643001.AN8V|F5643001.VDNM|F5643001.Y56EMID|F5643001.Y56DTAMT|F5643001.Y56EMDT|F5643001.Y56EMSUB|F5643001.S74IVD|F5643001.Y56VINVA|F5643001.Y56PSTS|F5643001.KCOO|F5643001.DOCO|F5643001.DCTO|F5643001.Y56INVDT|F5643002.UORG|F5643002.ITM|F5643002.LITM|F5643002.CITM|F5643002.UNCS|F5643002.AEXP|F5643002.CRCD|F5643001.VINV|F5643001.Y56TAXA|F5643001.Y56TAMT|F5643001.EXA"",
+        ""query"": {
+            ""autoFind"": true,
+            ""condition"": [
+                {
+                    ""value"": [
+                        {
+                            ""content"": ""{EmailSr}"",
+                            ""specialValueId"": ""LITERAL""
+                        }
+                    ],
+                    ""controlId"": ""F5643002.WFEMAILNO"",
+                    ""operator"": ""EQUAl""
+                }
+            ]
+        }
+    }";
+
+            data = data.Replace("{EmailSr}", EmailSr);
+            data = data.Replace("{ToKen}", Token);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Credentials);
+
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    //Root obj = System.Text.Json.JsonSerializer.Deserialize<Root>(result);
+                  
+                        Root root = JsonConvert.DeserializeObject<Root>(result);
+                  
+                    
+
+                    dynamic ass = JsonConvert.DeserializeObject(result);
+                    string reurnReslut = "";
+                    try
+                    {
+                        var itemRow = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset.Count;
+                        if(itemRow > 0)
+                        {
+                            var item = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_AN8V;
+                            var itemName = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_VDNM;
+                            reurnReslut = item +"_"+itemName;
+                        }
+                        else
+                        {
+                            return "NoRecodFound";
+                        }
+                      
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                    
+                    return reurnReslut;
                 }
                 else
                 {
@@ -382,7 +471,7 @@ namespace FaxVerification.Records
 
     public class UserAccount
     {
-        public string username { get; set; } 
+        public string username { get; set; }
         public string password { get; set; }
     }
 }

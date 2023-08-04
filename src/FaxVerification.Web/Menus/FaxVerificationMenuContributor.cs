@@ -49,15 +49,9 @@ public class FaxVerificationMenuContributor : IMenuContributor
 
         context.Menu.AddItem(
             new ApplicationMenuItem(
-                "Documents",
-                l["Menu:Documents"],
+                "Template Registration",
+                l["Template Registration"],
                 icon: "fa fa-file-text-o"
-            ).AddItem(
-                new ApplicationMenuItem(
-                "OCR.Validate",
-                l["Menu:Validate"],
-                url: "/OCR"
-                ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
             ).AddItem(
                 new ApplicationMenuItem(
                 "Configuration.Validate",
@@ -69,6 +63,20 @@ public class FaxVerificationMenuContributor : IMenuContributor
                 "Template_Registration.Validate",
                 l["Registration"],
                 url: "/Template_Registration"
+                ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
+            )
+         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "Documents",
+                l["Menu:Documents"],
+                icon: "fa fa-file-text-o"
+            ).AddItem(
+                new ApplicationMenuItem(
+                "OCR.Validate",
+                l["Menu:Validate"],
+                url: "/OCR"
                 ).RequirePermissions(FaxVerificationPermissions.Documents.Default)
             )
          );

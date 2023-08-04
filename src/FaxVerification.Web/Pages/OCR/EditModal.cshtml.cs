@@ -67,6 +67,12 @@ namespace FaxVerification.Web.Pages.OCR
             {
 
             }
+
+            string[] fileNamearrya = Data.FilePath.Split('_');
+            string EmailSr = Convert.ToString(Convert.ToInt32(fileNamearrya[0]));
+
+            String VendorNo = await _ocrAppService.GetVendorName(EmailSr);
+
             //Data.PersonDetails = JsonSerializer.Deserialize<EditDetailsViewModel>(ImageOcrDto.Output);
             //string Formconfigutration = _configuration.GetValue<string>("ConfigurationAtrributes");
             var fileContents = System.IO.File.ReadAllText(Path.Combine(Environment.WebRootPath, "Configuration/Config.json"));
@@ -125,6 +131,22 @@ namespace FaxVerification.Web.Pages.OCR
 
                     }
 
+                    if (person.Fields[j].FieldName == "Vendor No" && VendorNo != "NoRecodFound")
+                    {
+                        string[] vendorDetails = VendorNo.Split('_');
+
+
+                        person.Fields[j].RegExpression = vendorDetails[0];
+                        person.Fields[j].CoOrdinates = "";
+
+                    }
+                    if (person.Fields[j].FieldName == "Vendor Name" && VendorNo != "NoRecodFound")
+                    {
+                        string[] vendorDetails = VendorNo.Split('_');
+                        person.Fields[j].RegExpression = vendorDetails[1];
+                        person.Fields[j].CoOrdinates = "";
+
+                    }
 
                     if (Data.PersonDetails.Invoice.AdditionalFields[i].Text != "" && Data.PersonDetails.Invoice.AdditionalFields[i].Text != null)
                     {
@@ -136,7 +158,7 @@ namespace FaxVerification.Web.Pages.OCR
                 }
 
             }
-
+            Data.PersonDetails.TableDetailss = JsonSerializer.Serialize(Data.PersonDetails.Invoice.TableDetails);
             Data.FormConfiguration = person;
             //Configu = person;
         }
@@ -189,6 +211,8 @@ namespace FaxVerification.Web.Pages.OCR
 
             [HiddenInput]
             public string CurrentUserID { get; set; }
+
+           
         }
 
         public class ConfigurationSettViewModel
@@ -211,6 +235,8 @@ namespace FaxVerification.Web.Pages.OCR
             public Patient Patient { get; set; }
             public Invoice Invoice { get; set; }
             public List<ExtraFields> AdditionalFields { get; set; }
+            [HiddenInput]
+            public string TableDetailss { get; set; }
             public TextExtractionFields()
             {
                 Invoice = new();
@@ -244,6 +270,8 @@ namespace FaxVerification.Web.Pages.OCR
 
             public List<ExtraFields> AdditionalFields { get; set; }
 
+            public TableFields TableDetails { get; set; }
+
             public Invoice()
             {
                 InvNum = new();
@@ -254,6 +282,7 @@ namespace FaxVerification.Web.Pages.OCR
                 Tax = new();
                 Total = new();
                 AdditionalFields = new List<ExtraFields>();
+                TableDetails = new();
             }
 
 
@@ -533,6 +562,32 @@ namespace FaxVerification.Web.Pages.OCR
             public int? PageNumber { get; set; }
             [HiddenInput]
             public string Rectangle { get; set; }
+        }
+
+
+        public class TableFields
+        {
+            [HiddenInput]
+            public int? Rows { get; set; }
+            [HiddenInput]
+            public int? Columns { get; set; }
+
+            public List<CellDetails> Cells { get; set; }
+            public TableFields()
+            {
+                Cells = new List<CellDetails>();
+            }
+        }
+
+        public class CellDetails
+        {
+
+            [HiddenInput]
+            public int? CellNo { get; set; }
+            [HiddenInput]
+            public string Text { get; set; }
+            [HiddenInput]
+            public double? Confidence { get; set; }
         }
 
     }

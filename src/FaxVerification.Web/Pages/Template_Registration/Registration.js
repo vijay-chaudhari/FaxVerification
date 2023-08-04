@@ -82,6 +82,10 @@
                     var page = cordinates[4];
                     cordinates.pop();
 
+                    if (LabelN == "Vendor No" || LabelN == "Vendor Name") {
+                        page = 0;
+                    }
+
 
                     let cords = cordinates.join(',');
 

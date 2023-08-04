@@ -14,5 +14,9 @@ namespace FaxVerification.Records
     {
         // Task<List<OcrDto>> GetListAsync();
         Task<string> GetTokenAsync();
+
+        Task<string> GetVendorName(string EmailSr);
+
+
     }
 }
