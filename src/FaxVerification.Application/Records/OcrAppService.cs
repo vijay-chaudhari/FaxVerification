@@ -377,28 +377,28 @@ namespace FaxVerification.Records
             //string base64Credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
 
             string data = @"{
-        ""token"": ""{ToKen}"",
-        ""targetName"": ""V550102"",
-        ""targetType"": ""view"",
-        ""dataServiceType"": ""BROWSE"",
-        ""maxPageSize"": ""3000"",
-        ""returnControlIDs"": ""F5643001.AN8V|F5643001.VDNM|F5643001.Y56EMID|F5643001.Y56DTAMT|F5643001.Y56EMDT|F5643001.Y56EMSUB|F5643001.S74IVD|F5643001.Y56VINVA|F5643001.Y56PSTS|F5643001.KCOO|F5643001.DOCO|F5643001.DCTO|F5643001.Y56INVDT|F5643002.UORG|F5643002.ITM|F5643002.LITM|F5643002.CITM|F5643002.UNCS|F5643002.AEXP|F5643002.CRCD|F5643001.VINV|F5643001.Y56TAXA|F5643001.Y56TAMT|F5643001.EXA"",
-        ""query"": {
-            ""autoFind"": true,
-            ""condition"": [
-                {
-                    ""value"": [
-                        {
-                            ""content"": ""{EmailSr}"",
-                            ""specialValueId"": ""LITERAL""
-                        }
-                    ],
-                    ""controlId"": ""F5643002.WFEMAILNO"",
-                    ""operator"": ""EQUAl""
-                }
-            ]
-        }
-    }";
+                                ""token"": ""{ToKen}"",
+                                ""targetName"": ""V550102"",
+                                ""targetType"": ""view"",
+                                ""dataServiceType"": ""BROWSE"",
+                                ""maxPageSize"": ""3000"",
+                                ""returnControlIDs"": ""F5643001.AN8V|F5643001.VDNM|F5643001.Y56EMID|F5643001.Y56DTAMT|F5643001.Y56EMDT|F5643001.Y56EMSUB|F5643001.S74IVD|F5643001.Y56VINVA|F5643001.Y56PSTS|F5643001.KCOO|F5643001.DOCO|F5643001.DCTO|F5643001.Y56INVDT|F5643002.UORG|F5643002.ITM|F5643002.LITM|F5643002.CITM|F5643002.UNCS|F5643002.AEXP|F5643002.CRCD|F5643001.VINV|F5643001.Y56TAXA|F5643001.Y56TAMT|F5643001.EXA"",
+                                ""query"": {
+                                    ""autoFind"": true,
+                                    ""condition"": [
+                                        {
+                                            ""value"": [
+                                                {
+                                                    ""content"": ""{EmailSr}"",
+                                                    ""specialValueId"": ""LITERAL""
+                                                }
+                                            ],
+                                            ""controlId"": ""F5643002.WFEMAILNO"",
+                                            ""operator"": ""EQUAl""
+                                        }
+                                    ]
+                                }
+            }";
 
             data = data.Replace("{EmailSr}", EmailSr);
             data = data.Replace("{ToKen}", Token);
@@ -416,38 +416,114 @@ namespace FaxVerification.Records
                 {
                     string result = await response.Content.ReadAsStringAsync();
                     //Root obj = System.Text.Json.JsonSerializer.Deserialize<Root>(result);
-                  
-                        Root root = JsonConvert.DeserializeObject<Root>(result);
-                  
-                    
+
+                    Root root = JsonConvert.DeserializeObject<Root>(result);
+
+
 
                     dynamic ass = JsonConvert.DeserializeObject(result);
                     string reurnReslut = "";
                     try
                     {
                         var itemRow = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset.Count;
-                        if(itemRow > 0)
+                        if (itemRow > 0)
                         {
                             var item = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_AN8V;
                             var itemName = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_VDNM;
-                            reurnReslut = item +"_"+itemName;
+                            reurnReslut = item + "_" + itemName;
                         }
                         else
                         {
                             return "NoRecodFound";
                         }
-                      
+
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
-                    
+
                     return reurnReslut;
                 }
                 else
                 {
                     return "Error";
+                }
+            }
+        }
+
+        public async Task<VendorDetails> GetVendor(string EmailSr)
+        {
+            string url = "http://123.201.35.66:9192/jderest/v2/dataservice";
+            //string username = "harishp";
+            string Token = await GetTokenAsync();
+            //string password = "harishp";
+            //string base64Credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+
+            string data = @"{
+                                ""token"": ""{ToKen}"",
+                                ""targetName"": ""V550102"",
+                                ""targetType"": ""view"",
+                                ""dataServiceType"": ""BROWSE"",
+                                ""maxPageSize"": ""3000"",
+                                ""returnControlIDs"": ""F5643001.AN8V|F5643001.VDNM|F5643001.Y56EMID|F5643001.Y56DTAMT|F5643001.Y56EMDT|F5643001.Y56EMSUB|F5643001.S74IVD|F5643001.Y56VINVA|F5643001.Y56PSTS|F5643001.KCOO|F5643001.DOCO|F5643001.DCTO|F5643001.Y56INVDT|F5643002.UORG|F5643002.ITM|F5643002.LITM|F5643002.CITM|F5643002.UNCS|F5643002.AEXP|F5643002.CRCD|F5643001.VINV|F5643001.Y56TAXA|F5643001.Y56TAMT|F5643001.EXA"",
+                                ""query"": {
+                                    ""autoFind"": true,
+                                    ""condition"": [
+                                        {
+                                            ""value"": [
+                                                {
+                                                    ""content"": ""{EmailSr}"",
+                                                    ""specialValueId"": ""LITERAL""
+                                                }
+                                            ],
+                                            ""controlId"": ""F5643002.WFEMAILNO"",
+                                            ""operator"": ""EQUAl""
+                                        }
+                                    ]
+                                }
+            }";
+
+            data = data.Replace("{EmailSr}", EmailSr);
+            data = data.Replace("{ToKen}", Token);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    //Root obj = System.Text.Json.JsonSerializer.Deserialize<Root>(result);
+
+                    Root root = JsonConvert.DeserializeObject<Root>(result);
+                    try
+                    {
+                        var itemRow = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset.Count;
+                        if (itemRow > 0)
+                        {
+                            var item = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_AN8V;
+                            var itemName = root.Fs_DATABROWSE_V550102.Data.GridData.Rowset[0].F5643001_VDNM;
+                            return new VendorDetails { VendorId = item, VendorName = itemName };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    return null;
+                }
+                else
+                {
+                    return null;
                 }
             }
         }
